@@ -1,0 +1,3318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ABM Siswa WB2" />
+  <title>SMKS Wira Buana 2 — Asesmen Bakat &amp; Minat Siswa</title>
+  <link id="pwa-manifest-link" rel="manifest" href="" />
+  <link id="apple-touch-icon-link" rel="apple-touch-icon" href="" />
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-subtle: #64748b;
+      --primary: #0369a1;
+      --primary-dark: #0c4a6e;
+      --primary-light: #e0f2fe;
+      --accent: #d97706;
+      --accent-light: #fef3c7;
+      --success: #15803d;
+      --success-light: #dcfce7;
+      --danger: #b91c1c;
+      --danger-light: #fee2e2;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.12);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%);
+      color: #ffffff;
+      padding: calc(10px + var(--safe-top)) 16px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.18);
+    }
+
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: #bae6fd;
+      margin: 1px 0 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-header-install {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 10px;
+      padding: 0 12px;
+      min-height: 44px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-header-install:active {
+      transform: scale(0.98);
+    }
+
+    .stepper-wrap {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+    }
+
+    .stepper {
+      max-width: 860px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      color: var(--text-subtle);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .step-item.active {
+      background: var(--primary-light);
+      border-color: #7dd3fc;
+      color: var(--primary-dark);
+      font-weight: 800;
+    }
+
+    .step-item.done {
+      background: var(--success-light);
+      border-color: #86efac;
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-item.active .step-num {
+      background: var(--primary);
+    }
+
+    .step-item.done .step-num {
+      background: var(--success);
+    }
+
+    .step-label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .main-container {
+      flex: 1;
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 16px 16px calc(28px + var(--safe-bottom));
+    }
+
+    .main-container.exam-active {
+      padding-bottom: calc(96px + var(--safe-bottom));
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    @media (min-width: 640px) {
+      .card-body {
+        padding: 26px;
+      }
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 100%);
+      color: #ffffff;
+      padding: 20px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(251, 191, 36, 0.2);
+      color: #fde68a;
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .hero-desc {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: #e0f2fe;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .span-2 {
+        grid-column: span 2;
+      }
+    }
+
+    .field-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .req {
+      color: var(--danger);
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 14px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text);
+      background: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.16);
+    }
+
+    .field-error {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--danger);
+      margin-top: 4px;
+    }
+
+    .jurusan-preview {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 13px;
+      color: #0c4a6e;
+    }
+
+    .jurusan-preview strong {
+      display: block;
+      font-size: 13.5px;
+      margin-bottom: 3px;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .mode-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .mode-card {
+      text-align: left;
+      padding: 14px;
+      min-height: 48px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--border);
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .mode-card.selected {
+      border-color: var(--primary);
+      background: #f0f9ff;
+    }
+
+    .mode-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .mode-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .mode-tag {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .mode-card:not(.selected) .mode-tag {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .mode-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .rules-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .rules-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0 0 8px;
+    }
+
+    .rules-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      display: grid;
+      gap: 5px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.15s, transform 0.1s;
+      text-decoration: none;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.985);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(3, 105, 161, 0.28);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(21, 128, 61, 0.25);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text);
+      border: 1.5px solid var(--border-strong);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--surface-soft);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .exam-topbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .student-chip {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      background: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: 8px;
+      display: inline-block;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .exam-stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 6px 11px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .stat-pill.timer {
+      color: #fde047;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-drawer-toggle {
+      min-height: 44px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--text);
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0284c7, #16a34a);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    .question-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dim-badge {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      background: var(--primary-light);
+      padding: 5px 11px;
+      border-radius: 8px;
+    }
+
+    .dim-badge.interest {
+      color: #92400e;
+      background: var(--accent-light);
+    }
+
+    .q-counter {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-subtle);
+    }
+
+    .visual-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: auto;
+    }
+
+    .question-prompt {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .question-prompt code {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0c4a6e;
+    }
+
+    .options-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: border-color 0.12s, background-color 0.12s;
+    }
+
+    .option-btn:hover {
+      border-color: #7dd3fc;
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary);
+      background: #f0f9ff;
+    }
+
+    .option-letter {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .option-btn.selected .option-letter {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .option-text {
+      font-size: 14.5px;
+      font-weight: 500;
+      line-height: 1.45;
+      padding-top: 3px;
+      flex: 1;
+    }
+
+    .option-btn.selected .option-text {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .exam-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 35;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border);
+      padding: 10px 16px calc(10px + var(--safe-bottom));
+      box-shadow: 0 -2px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    .exam-bottom-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .nav-indicator {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+
+    @media (min-width: 640px) {
+      .modal-backdrop {
+        align-items: center;
+        padding: 16px;
+      }
+    }
+
+    .modal-panel {
+      background: #ffffff;
+      width: 100%;
+      max-width: 540px;
+      max-height: 85dvh;
+      border-radius: 20px 20px 0 0;
+      padding: 20px 20px calc(20px + var(--safe-bottom));
+      overflow-y: auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    @media (min-width: 640px) {
+      .modal-panel {
+        border-radius: 20px;
+        padding: 24px;
+      }
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .btn-close {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .num-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+
+    @media (min-width: 480px) {
+      .num-grid {
+        grid-template-columns: repeat(8, 1fr);
+      }
+    }
+
+    .num-btn {
+      min-height: 44px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-strong);
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .num-btn.answered {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .num-btn.current {
+      border: 2.5px solid #0f172a;
+      box-shadow: 0 0 0 2px #bae6fd;
+    }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+    .report-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .report-actions .btn {
+      flex: 1 1 180px;
+    }
+
+    .report-sheet {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    @media (min-width: 640px) {
+      .report-sheet {
+        padding: 30px 32px;
+      }
+    }
+
+    .rep-kop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 2.5px solid #0c4a6e;
+    }
+
+    .rep-kop-agency {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #0369a1;
+      margin: 0 0 2px;
+    }
+
+    .rep-kop-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    .rep-kop-school {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      margin: 3px 0 0;
+    }
+
+    .rep-emblem {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0c4a6e, #0f172a);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+
+    .rep-identity {
+      margin-top: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    @media (min-width: 640px) {
+      .rep-identity {
+        grid-template-columns: 2fr 1fr;
+        align-items: center;
+      }
+    }
+
+    .rep-student-name {
+      font-size: 18px;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 0 0 4px;
+      text-transform: uppercase;
+    }
+
+    .rep-meta-line {
+      font-size: 12.5px;
+      color: #334155;
+      margin: 0;
+    }
+
+    .rep-date-box {
+      font-size: 12px;
+      color: #475569;
+    }
+
+    @media (min-width: 640px) {
+      .rep-date-box {
+        text-align: right;
+      }
+    }
+
+    .sec-heading {
+      font-size: 12.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #0c4a6e;
+      margin: 18px 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .top3-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .top3-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .top3-card {
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .top3-card.rank-1 { background: linear-gradient(135deg, #0c4a6e, #0369a1); }
+    .top3-card.rank-2 { background: linear-gradient(135deg, #1e3a8a, #1d4ed8); }
+    .top3-card.rank-3 { background: linear-gradient(135deg, #334155, #0f172a); }
+
+    .rank-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #fbbf24;
+      color: #0f172a;
+      font-size: 12px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .top3-card.rank-2 .rank-num { background: #e2e8f0; }
+    .top3-card.rank-3 .rank-num { background: #f59e0b; color: #ffffff; }
+
+    .top3-score {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .dim-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .dim-card {
+      border: 1px solid #e2e8f0;
+      border-left-width: 4px;
+      border-radius: 10px;
+      padding: 11px 14px;
+      background: #ffffff;
+    }
+
+    .dim-card.baik { border-left-color: #16a34a; }
+    .dim-card.sedang { border-left-color: #0284c7; }
+    .dim-card.kurang { border-left-color: #dc2626; }
+
+    .dim-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .dim-card-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .cat-pill {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-left: 6px;
+    }
+
+    .cat-pill.baik { background: #dcfce7; color: #166534; }
+    .cat-pill.sedang { background: #e0f2fe; color: #075985; }
+    .cat-pill.kurang { background: #fee2e2; color: #991b1b; }
+
+    .score-pill {
+      font-size: 12.5px;
+      font-weight: 900;
+      padding: 2px 9px;
+      border-radius: 6px;
+      color: #ffffff;
+    }
+
+    .score-pill.baik { background: #16a34a; }
+    .score-pill.sedang { background: #0284c7; }
+    .score-pill.kurang { background: #dc2626; }
+
+    .dim-narrative {
+      font-size: 12px;
+      color: #334155;
+      line-height: 1.5;
+      text-align: justify;
+      margin: 0;
+    }
+
+    .jurusan-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .jurusan-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .jur-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #ffffff;
+    }
+
+    .jur-item.chosen {
+      border-color: #0284c7;
+      background: #f0f9ff;
+    }
+
+    .jur-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: #64748b;
+    }
+
+    .bar-fill.top1 { background: #16a34a; }
+    .bar-fill.top2 { background: #0284c7; }
+
+    .jur-sub {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #475569;
+    }
+
+    .recommendation-note {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #0f172a;
+      line-height: 1.55;
+      text-align: justify;
+    }
+
+    .rep-footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 11px;
+      color: #475569;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: calc(82px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      max-width: 90vw;
+      text-align: center;
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 10mm;
+      }
+
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      .main-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .report-sheet {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+      }
+
+      .top3-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+
+      .jurusan-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+
+      .dim-card, .top3-card, .jur-item, .recommendation-note, .rep-identity {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .dim-narrative {
+        font-size: 10.5px;
+        line-height: 1.4;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER RESMI RINGAN -->
+  <header class="app-header no-print">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+            <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+          </svg>
+        </div>
+        <div style="min-width:0;">
+          <h1 class="brand-title">SMKS WIRA BUANA 2</h1>
+          <p class="brand-sub">Asesmen Bakat &amp; Minat Siswa</p>
+        </div>
+      </div>
+      <button type="button" id="btn-open-install" class="btn-header-install" aria-label="Cara pasang aplikasi di HP">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+          <line x1="12" y1="18" x2="12.01" y2="18"></line>
+        </svg>
+        <span>Pasang di HP</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- INDIKATOR 3 TAHAP SISWA -->
+  <div class="stepper-wrap no-print">
+    <div class="stepper" role="navigation" aria-label="Tahapan Asesmen">
+      <div id="step-1-pill" class="step-item active">
+        <span class="step-num">1</span>
+        <span class="step-label">Identitas Siswa</span>
+      </div>
+      <div id="step-2-pill" class="step-item">
+        <span class="step-num">2</span>
+        <span class="step-label">Kerjakan Tes</span>
+      </div>
+      <div id="step-3-pill" class="step-item">
+        <span class="step-num">3</span>
+        <span class="step-label">Hasil Pemetaan</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- KONTEN UTAMA -->
+  <main id="main-container" class="main-container">
+
+    <!-- TAHAP 1: IDENTITAS & PILIHAN JURUSAN SISWA -->
+    <section id="stage-1" aria-labelledby="stage-1-title">
+      <div class="card">
+        <div class="hero-banner">
+          <span class="hero-badge">INSTRUMEN ASESMEN MANDIRI SISWA</span>
+          <h2 id="stage-1-title" class="hero-title">Asesmen Bakat &amp; Minat Kejuruan</h2>
+          <p class="hero-desc">
+            Isi identitas diri dan pilih jurusan Anda (<strong>RPL, TKJ, TKR, atau TSM</strong>) agar butir soal bakat dan minat selaras dengan kompetensi keahlian Anda.
+          </p>
+        </div>
+
+        <form id="student-form" class="card-body" novalidate>
+          <div class="form-grid">
+            <div class="span-2">
+              <label for="inp-nama" class="field-label">Nama Lengkap Siswa <span class="req">*</span></label>
+              <input type="text" id="inp-nama" class="form-input" placeholder="Contoh: YOGI DWI SOBRIANSYAH" autocomplete="name" required />
+              <div id="err-nama" class="field-error hidden">Nama lengkap siswa wajib diisi.</div>
+            </div>
+
+            <div>
+              <label for="inp-nisn" class="field-label">NISN (10 Digit) <span class="req">*</span></label>
+              <input type="text" id="inp-nisn" class="form-input" inputmode="numeric" maxlength="10" placeholder="Contoh: 0097137846" required />
+              <div id="err-nisn" class="field-error hidden">NISN wajib diisi tepat 10 digit angka.</div>
+            </div>
+
+            <div>
+              <label for="inp-kelas" class="field-label">Kelas <span class="req">*</span></label>
+              <input type="text" id="inp-kelas" class="form-input" placeholder="Contoh: 10 RPL 1 atau 11 TKR 2" required />
+              <div id="err-kelas" class="field-error hidden">Kelas wajib diisi (contoh: 10 RPL 1).</div>
+            </div>
+
+            <div class="span-2">
+              <label for="inp-jurusan" class="field-label">Pilihan Jurusan / Kompetensi Keahlian <span class="req">*</span></label>
+              <select id="inp-jurusan" class="form-select">
+                <option value="RPL">RPL — Rekayasa Perangkat Lunak</option>
+                <option value="TKJ">TKJ — Teknik Komputer &amp; Jaringan</option>
+                <option value="TKR">TKR — Teknik Kendaraan Ringan</option>
+                <option value="TSM">TSM — Teknik Sepeda Motor</option>
+              </select>
+            </div>
+
+            <div class="span-2">
+              <div id="jurusan-preview-box" class="jurusan-preview">
+                <strong id="jurusan-preview-title">RPL — Rekayasa Perangkat Lunak</strong>
+                <span id="jurusan-preview-desc">Soal bakat 7 dimensi BP3 dan inventori minat akan disesuaikan dengan alur logika pemrograman, debugging, basis data, dan pengembangan aplikasi.</span>
+              </div>
+            </div>
+
+            <div class="span-2">
+              <span class="field-label">Pilih Mode Asesmen</span>
+              <div class="mode-grid" role="radiogroup" aria-label="Pilih Mode Asesmen">
+                <button type="button" id="mode-quick" class="mode-card selected" data-mode="quick" aria-pressed="true">
+                  <div class="mode-head">
+                    <span class="mode-title">Mode Standar HP (29 Butir)</span>
+                    <span class="mode-tag">Direkomendasikan</span>
+                  </div>
+                  <p class="mode-desc">21 soal bakat 7 dimensi BP3 (3/dimensi) + 8 butir inventori minat kerja kejuruan.</p>
+                </button>
+
+                <button type="button" id="mode-full" class="mode-card" data-mode="full" aria-pressed="false">
+                  <div class="mode-head">
+                    <span class="mode-title">Mode Lengkap BP3 (51 Butir)</span>
+                    <span class="mode-tag">Lengkap</span>
+                  </div>
+                  <p class="mode-desc">35 soal bakat 7 dimensi BP3 (5/dimensi) + 16 butir inventori minat kerja kejuruan.</p>
+                </button>
+              </div>
+            </div>
+
+            <div class="span-2">
+              <div class="rules-box">
+                <h3 class="rules-title">Petunjuk Pengerjaan Ujian Siswa</h3>
+                <ul class="rules-list">
+                  <li>Waktu pengerjaan berjalan otomatis sejak Anda menekan tombol mulai.</li>
+                  <li>Anda bebas berpindah nomor dan <strong>mengubah jawaban kapan saja</strong> sebelum menekan tombol <em>Selesai &amp; Kunci Jawaban</em>.</li>
+                  <li>Setelah jawaban dikunci, skor tidak dapat diubah dan Kartu Hasil Pemetaan Bakat langsung tampil.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="span-2" style="margin-top: 4px;">
+              <button type="submit" id="btn-start-exam" class="btn btn-primary btn-block">
+                <span>Mulai Mengerjakan Tes (29 Butir)</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAHAP 2: RUANG UJIAN INTERAKTIF SISWA -->
+    <section id="stage-2" class="hidden" aria-label="Ruang Ujian Siswa">
+      <div class="exam-topbar">
+        <div style="min-width:0; flex: 1 1 200px;">
+          <span id="exam-student-chip" class="student-chip">SISWA • 10 RPL 1</span>
+        </div>
+        <div class="exam-stats">
+          <span class="stat-pill timer" title="Waktu berjalan">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="exam-timer">00:00</span>
+          </span>
+          <span class="stat-pill" id="exam-answered-pill">Terjawab: 0/29</span>
+          <button type="button" id="btn-open-drawer" class="btn-drawer-toggle">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Daftar Soal</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="progress-track" aria-hidden="true">
+        <div id="exam-progress-fill" class="progress-fill"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="question-meta">
+            <span id="q-dim-badge" class="dim-badge">1. Kemampuan Klerikal</span>
+            <span id="q-pos-label" class="q-counter">Soal 1 dari 29</span>
+          </div>
+
+          <div id="q-visual-box" class="visual-box hidden"></div>
+
+          <div id="q-prompt" class="question-prompt"></div>
+
+          <div id="q-options" class="options-stack" role="radiogroup" aria-label="Pilihan Jawaban"></div>
+        </div>
+      </div>
+
+      <div class="exam-bottom-bar">
+        <div class="exam-bottom-inner">
+          <button type="button" id="btn-prev-q" class="btn btn-secondary">
+            &larr; Sebelumnya
+          </button>
+          <div id="bottom-q-indicator" class="nav-indicator">1 / 29</div>
+          <button type="button" id="btn-next-q" class="btn btn-primary">
+            Selanjutnya &rarr;
+          </button>
+          <button type="button" id="btn-finish-q" class="btn btn-success hidden">
+            Selesai &amp; Kunci Jawaban
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAHAP 3: KARTU HASIL & LAPORAN PEMETAAN BAKAT SISWA -->
+    <section id="stage-3" class="hidden" aria-label="Hasil Pemetaan Bakat Siswa">
+      <div class="report-actions no-print">
+        <button type="button" id="btn-print-pdf" class="btn btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>Cetak / Simpan PDF Hasil</span>
+        </button>
+        <button type="button" id="btn-download-txt" class="btn btn-secondary">
+          <span>Unduh Ringkasan (.txt)</span>
+        </button>
+        <button type="button" id="btn-download-json" class="btn btn-secondary">
+          <span>Unduh Data (.json)</span>
+        </button>
+        <button type="button" id="btn-reset-exam" class="btn btn-secondary">
+          <span>Tes Ulang / Siswa Baru</span>
+        </button>
+      </div>
+
+      <article class="report-sheet">
+        <div class="rep-kop">
+          <div>
+            <p class="rep-kop-agency">SMKS WIRA BUANA 2</p>
+            <h2 class="rep-kop-title">HASIL PEMETAAN ASESMEN BAKAT &amp; MINAT SISWA</h2>
+            <p class="rep-kop-school">Kompetensi Keahlian RPL, TKJ, TKR &amp; TSM</p>
+          </div>
+          <div class="rep-emblem" aria-hidden="true">
+            <span>ABM</span>
+            <span style="font-size:8px; opacity:0.85;">WB 2</span>
+          </div>
+        </div>
+
+        <div class="rep-identity">
+          <div>
+            <h3 id="rep-nama" class="rep-student-name">-</h3>
+            <p class="rep-meta-line">
+              NISN: <strong id="rep-nisn">-</strong> &bull;
+              Kelas: <strong id="rep-kelas">-</strong> &bull;
+              Jurusan: <strong id="rep-jurusan">-</strong>
+            </p>
+          </div>
+          <div class="rep-date-box">
+            <div>Tanggal Pelaksanaan</div>
+            <strong id="rep-tanggal" style="color:#0f172a;">-</strong>
+          </div>
+        </div>
+
+        <h4 class="sec-heading">
+          <span>3 Bakat Terbaik (Potensi Tertinggi BP3)</span>
+          <span style="font-size:11px; font-weight:600; color:#64748b;">Peringkat 1 &ndash; 3</span>
+        </h4>
+        <div id="rep-top3-grid" class="top3-grid"></div>
+
+        <h4 class="sec-heading">
+          <span>7 Dimensi Kemampuan (Acuan BP3)</span>
+          <span style="font-size:11px; font-weight:600; color:#64748b;">Baik (&ge;65) &bull; Sedang (40&ndash;64) &bull; Kurang (&lt;40)</span>
+        </h4>
+        <div id="rep-dimensions-list" class="dim-list"></div>
+
+        <h4 class="sec-heading">
+          <span>Pemetaan Kecocokan 4 Jurusan SMKS Wira Buana 2</span>
+          <span id="rep-fit-status" style="font-size:11px; font-weight:800; color:#0369a1;">-</span>
+        </h4>
+        <div id="rep-jurusan-grid" class="jurusan-grid"></div>
+        <div id="rep-recommendation-note" class="recommendation-note"></div>
+
+        <div class="rep-footer">
+          <p style="margin:0 0 4px; font-style:italic; font-weight:600; color:#1e293b;">
+            "Hasil tes merupakan bahan pertimbangan pemetaan potensi diri, bukan penentu mutlak. Konsultasikan hasil ini bersama Guru BK dan Wali Kelas di SMKS Wira Buana 2."
+          </p>
+          <p style="margin:0;">
+            &copy; <span id="rep-year">2026</span> SMKS Wira Buana 2 &bull; Instrumen Asesmen Bakat &amp; Minat Siswa
+          </p>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- MODAL DAFTAR NOMOR SOAL -->
+  <div id="drawer-modal" class="modal-backdrop hidden no-print" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 id="drawer-title" class="modal-title">Daftar Nomor Soal</h3>
+        <button type="button" id="btn-close-drawer" class="btn-close" aria-label="Tutup daftar soal">&times;</button>
+      </div>
+      <div id="drawer-num-grid" class="num-grid"></div>
+      <div class="legend-row">
+        <span><i class="legend-dot" style="background:#0369a1;"></i>Sudah Dijawab</span>
+        <span><i class="legend-dot" style="background:#f8fafc; border:1.5px solid #cbd5e1;"></i>Belum Dijawab</span>
+        <span><i class="legend-dot" style="background:#ffffff; border:2px solid #0f172a;"></i>Sedang Dibuka</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL KONFIRMASI KUNCI JAWABAN -->
+  <div id="confirm-modal" class="modal-backdrop hidden no-print" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-panel" style="max-width:440px;">
+      <div class="modal-head">
+        <h3 id="confirm-title" class="modal-title">Selesai &amp; Kunci Jawaban?</h3>
+        <button type="button" id="btn-close-confirm" class="btn-close" aria-label="Tutup konfirmasi">&times;</button>
+      </div>
+      <p id="confirm-summary-text" style="font-size:14px; color:#334155; margin:0 0 18px; line-height:1.55;"></p>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button type="button" id="btn-cancel-finish" class="btn btn-secondary">Kembali ke Soal</button>
+        <button type="button" id="btn-confirm-finish" class="btn btn-success">Ya, Kunci Jawaban</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL KONFIRMASI TES ULANG / SISWA BARU -->
+  <div id="reset-modal" class="modal-backdrop hidden no-print" role="dialog" aria-modal="true" aria-labelledby="reset-title">
+    <div class="modal-panel" style="max-width:440px;">
+      <div class="modal-head">
+        <h3 id="reset-title" class="modal-title">Mulai Tes Ulang / Siswa Baru?</h3>
+        <button type="button" id="btn-close-reset" class="btn-close" aria-label="Tutup konfirmasi reset">&times;</button>
+      </div>
+      <p style="font-size:14px; color:#334155; margin:0 0 18px; line-height:1.55;">
+        Sesi hasil ujian saat ini akan dihapus agar siswa baru dapat mengisi identitas dan mengerjakan tes dari awal. Pastikan Anda sudah mencetak atau mengunduh hasil jika diperlukan.
+      </p>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button type="button" id="btn-cancel-reset" class="btn btn-secondary">Batal</button>
+        <button type="button" id="btn-confirm-reset" class="btn btn-primary">Ya, Reset Sesi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PANDUAN PASANG DI HP -->
+  <div id="install-modal" class="modal-backdrop hidden no-print" role="dialog" aria-modal="true" aria-labelledby="install-title">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 id="install-title" class="modal-title">Pasang Aplikasi di Layar Utama HP</h3>
+        <button type="button" id="btn-close-install" class="btn-close" aria-label="Tutup panduan HP">&times;</button>
+      </div>
+      <div style="display:grid; gap:12px; font-size:13px; color:#334155;">
+        <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:12px; padding:12px;">
+          <strong style="color:#0c4a6e; display:block; margin-bottom:4px;">HP Android (Google Chrome)</strong>
+          1. Buka tautan aplikasi ini di <strong>Chrome</strong>.<br>
+          2. Ketuk ikon <strong>titik tiga (&vellip;)</strong> di kanan atas.<br>
+          3. Pilih <strong>Tambahkan ke layar utama</strong> atau <strong>Instal aplikasi</strong>.
+        </div>
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:12px;">
+          <strong style="color:#166534; display:block; margin-bottom:4px;">iPhone / iPad (Safari iOS)</strong>
+          1. Buka tautan aplikasi ini di <strong>Safari</strong>.<br>
+          2. Ketuk ikon <strong>Bagikan (Share)</strong> di bilah bawah.<br>
+          3. Pilih <strong>Tambah ke Layar Utama (Add to Home Screen)</strong> lalu ketuk <strong>Tambah</strong>.
+        </div>
+      </div>
+      <div style="margin-top:16px; text-align:right;">
+        <button type="button" id="btn-ok-install" class="btn btn-primary">Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden no-print" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var STORAGE_KEY = 'WB2_SISWA_ABM_SESSION_V1';
+
+      /* =====================================================================
+         1. INISIALISASI PWA MANIFEST & IKON INLINE (MANDIRI TANPA EKSTERNAL)
+         ===================================================================== */
+      function initInlinePWA() {
+        try {
+          var svgIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">' +
+            '<rect width="192" height="192" rx="40" fill="#0c4a6e"/>' +
+            '<path d="M96 42L164 78L96 114L28 78L96 42Z" fill="#38bdf8"/>' +
+            '<path d="M52 96V130C52 142 72 152 96 152C120 152 140 142 140 130V96L96 120L52 96Z" fill="#ffffff"/>' +
+            '</svg>';
+          var iconDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
+
+          var appleLink = document.getElementById('apple-touch-icon-link');
+          if (appleLink) appleLink.setAttribute('href', iconDataUrl);
+
+          var manifestObj = {
+            name: 'Asesmen Bakat & Minat Siswa — SMKS Wira Buana 2',
+            short_name: 'ABM Siswa WB2',
+            description: 'Aplikasi Tes Mandiri Asesmen Bakat & Minat Siswa SMKS Wira Buana 2',
+            start_url: '.',
+            display: 'standalone',
+            background_color: '#f1f5f9',
+            theme_color: '#0f172a',
+            icons: [
+              {
+                src: iconDataUrl,
+                sizes: '192x192',
+                type: 'image/svg+xml',
+                purpose: 'any maskable'
+              }
+            ]
+          };
+
+          if (window.location.protocol !== 'file:' && typeof Blob !== 'undefined' && URL && URL.createObjectURL) {
+            var blob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+            var manifestUrl = URL.createObjectURL(blob);
+            var manifestLink = document.getElementById('pwa-manifest-link');
+            if (manifestLink) manifestLink.setAttribute('href', manifestUrl);
+          }
+        } catch (err) {
+          // Abaikan bila pembatasan browser memblokir Blob URL
+        }
+      }
+
+      /* =====================================================================
+         2. DATA JURUSAN & 7 DIMENSI KEMAMPUAN (ACUAN BP3)
+         ===================================================================== */
+      var JURUSAN_INFO = {
+        RPL: {
+          code: 'RPL',
+          name: 'Rekayasa Perangkat Lunak',
+          desc: 'Soal bakat 7 dimensi BP3 dan inventori minat akan disesuaikan dengan alur logika pemrograman, debugging, basis data, dan pengembangan aplikasi.',
+          weights: {
+            penalaran: 0.24,
+            kuantitatif: 0.20,
+            klerikal: 0.16,
+            verbal: 0.14,
+            bahasa: 0.12,
+            spasial: 0.08,
+            mekanik: 0.06
+          }
+        },
+        TKJ: {
+          code: 'TKJ',
+          name: 'Teknik Komputer & Jaringan',
+          desc: 'Soal bakat 7 dimensi BP3 dan inventori minat akan disesuaikan dengan topologi jaringan, konfigurasi perangkat keras/server, dan diagnostik koneksi.',
+          weights: {
+            penalaran: 0.22,
+            klerikal: 0.18,
+            spasial: 0.16,
+            kuantitatif: 0.14,
+            mekanik: 0.12,
+            bahasa: 0.10,
+            verbal: 0.08
+          }
+        },
+        TKR: {
+          code: 'TKR',
+          name: 'Teknik Kendaraan Ringan',
+          desc: 'Soal bakat 7 dimensi BP3 dan inventori minat akan disesuaikan dengan sistem kelistrikan/mesin mobil, pembacaan diagram teknis, dan perawatan berkala.',
+          weights: {
+            mekanik: 0.28,
+            spasial: 0.20,
+            penalaran: 0.16,
+            klerikal: 0.12,
+            kuantitatif: 0.10,
+            bahasa: 0.08,
+            verbal: 0.06
+          }
+        },
+        TSM: {
+          code: 'TSM',
+          name: 'Teknik Sepeda Motor',
+          desc: 'Soal bakat 7 dimensi BP3 dan inventori minat akan disesuaikan dengan mekanika sepeda motor, sistem injeksi/transmisi, dan ketelitian penyetelan komponen.',
+          weights: {
+            mekanik: 0.28,
+            spasial: 0.18,
+            penalaran: 0.16,
+            klerikal: 0.14,
+            kuantitatif: 0.10,
+            bahasa: 0.08,
+            verbal: 0.06
+          }
+        }
+      };
+
+      var DIMENSIONS = [
+        {
+          id: 'klerikal',
+          no: 1,
+          name: 'Kemampuan Klerikal',
+          narratives: {
+            baik: 'Siswa mampu menyelesaikan tugas-tugas terstruktur dan berulang dengan kecepatan, ketelitian, konsistensi, serta daya ingat yang baik. Koordinasi antara perhatian dan tindakan berjalan optimal sehingga pencatatan, verifikasi data, dan pengecekan prosedur berlangsung akurat.',
+            sedang: 'Siswa cukup mampu mengerjakan tugas-tugas sederhana dan berulang yang memerlukan ketelitian serta konsistensi, namun pada tugas dengan tenggat waktu ketat atau volume data besar ketelitian masih perlu dijaga agar tidak terjadi kekeliruan kecil.',
+            kurang: 'Siswa masih mengalami kendala ketika menyelesaikan tugas-tugas sederhana dan berulang yang membutuhkan kecepatan, ketelitian, konsistensi, dan daya ingat. Koordinasi antara perhatian dan tindakan belum optimal sehingga akurasi pada pekerjaan berulang perlu terus dilatih.'
+          }
+        },
+        {
+          id: 'bahasa',
+          no: 2,
+          name: 'Kemampuan Penggunaan Bahasa',
+          narratives: {
+            baik: 'Siswa mampu menangkap gagasan utama dari kalimat maupun bacaan dengan baik serta memahami kaidah berbahasa secara tepat. Penguasaan kosakata dan ketepatan makna mendukung penyusunan laporan, dokumentasi teknis, serta komunikasi tertulis yang terstruktur.',
+            sedang: 'Siswa cukup mampu memahami isi bacaan umum dan kaidah bahasa dasar, tetapi pada teks teknis yang padat atau penyusunan laporan terstruktur masih memerlukan ketelitian lebih dalam memilih diksi dan merangkai kalimat.',
+            kurang: 'Siswa masih mengalami kendala dalam menangkap gagasan dari suatu kalimat atau bacaan serta memiliki keterbatasan dalam memahami aturan berbahasa secara formal. Penguasaan kosakata sesuai makna baku dan penyusunan laporan tertulis masih perlu ditingkatkan.'
+          }
+        },
+        {
+          id: 'mekanik',
+          no: 3,
+          name: 'Kemampuan Mekanik',
+          narratives: {
+            baik: 'Siswa memahami fungsi, prinsip kerja, dan keterkaitan komponen pada peralatan serta sistem mekanis/teknis. Kemampuan ini mendukung pemahaman alur gerak, transmisi daya, perawatan komponen, dan analisis gangguan pada perangkat atau mesin.',
+            sedang: 'Siswa cukup mampu mengenali penggunaan dasar peralatan dan komponen teknis, namun pemahaman mengenai hubungan antarbagian serta prinsip kerja menyeluruh masih berkembang dan perlu diperkuat melalui praktik terarah.',
+            kurang: 'Siswa belum memahami secara menyeluruh fungsi dan cara kerja peralatan yang menggunakan prinsip mekanika atau sistem teknis. Pemahaman terhadap hubungan antarkomponen dan prinsip kerjanya masih membutuhkan penguatan bertahap.'
+          }
+        },
+        {
+          id: 'kuantitatif',
+          no: 4,
+          name: 'Kemampuan Kuantitatif',
+          narratives: {
+            baik: 'Siswa mampu mengolah informasi numerik, melakukan perhitungan, memperkirakan besaran, serta membaca hubungan angka dan simbol secara tepat. Kemampuan ini membantu pengambilan keputusan berbasis ukuran, rasio, dan data kuantitatif.',
+            sedang: 'Siswa cukup mampu melakukan operasi hitung dasar dan membaca data angka sederhana, tetapi pada soal yang menuntut estimasi, rasio, atau interpretasi pola numerik berlapis masih memerlukan waktu dan ketelitian ekstra.',
+            kurang: 'Siswa masih mengalami kendala dalam menyelesaikan masalah yang melibatkan informasi numerik atau kuantitatif. Penentuan strategi hitung, estimasi, dan pembacaan hubungan angka maupun simbol masih perlu bimbingan lebih lanjut.'
+          }
+        },
+        {
+          id: 'penalaran',
+          no: 5,
+          name: 'Kemampuan Penalaran',
+          narratives: {
+            baik: 'Siswa mampu menelaah hubungan antar-informasi, menarik kesimpulan logis, dan menerapkan konsep pada situasi baru secara runtut. Kemampuan ini mendukung pemecahan masalah bertahap, analisis sebab-akibat, dan pertimbangan keputusan yang matang.',
+            sedang: 'Siswa cukup mampu mengikuti alur logika pada masalah yang sudah dikenal, namun ketika menghadapi kasus baru atau informasi yang bercabang masih perlu latihan menyusun langkah analisis secara sistematis.',
+            kurang: 'Siswa masih mengalami kendala dalam memahami hubungan antar-konsep/informasi dan mengatasi masalah yang kurang familier. Penerapan konsep ke situasi berbeda serta pengambilan keputusan berbasis analisis menyeluruh masih perlu dilatih.'
+          }
+        },
+        {
+          id: 'spasial',
+          no: 6,
+          name: 'Kemampuan Spasial',
+          narratives: {
+            baik: 'Siswa mampu membayangkan bentuk, posisi, rotasi, dan tata letak objek dua maupun tiga dimensi secara akurat. Kemampuan ini sangat membantu dalam membaca diagram, tata ruang/topologi, arah gerak, dan visualisasi struktur.',
+            sedang: 'Siswa cukup mampu mengenali bentuk dan pola visual sederhana, namun pada perubahan sudut pandang, rotasi, atau pemetaan tata letak yang lebih kompleks masih memerlukan latihan visualisasi.',
+            kurang: 'Siswa masih mengalami kendala dalam mengolah informasi visual dan keruangan secara menyeluruh. Pemahaman perubahan orientasi, tata letak, atau struktur bentuk masih sebatas pola sederhana dan perlu terus diasah.'
+          }
+        },
+        {
+          id: 'verbal',
+          no: 7,
+          name: 'Kemampuan Verbal',
+          narratives: {
+            baik: 'Siswa mampu memahami konsep verbal, mengategorikan pengertian berdasarkan persamaan/perbedaan, dan menjabarkan gagasan secara logis. Kemampuan ini mendukung pemahaman istilah, instruksi kerja, dan perumusan ide secara jelas.',
+            sedang: 'Siswa cukup mampu menangkap pengertian kata dan konsep umum, namun pada pengelompokan konsep abstrak atau penjabaran istilah ke langkah operasional masih perlu ketelitian.',
+            kurang: 'Siswa masih mengalami kendala dalam memahami konsep-konsep berbentuk verbal serta mengategorikan hubungan makna secara tepat. Penguasaan logika berbahasa dan penjabaran konsep operasional masih membutuhkan latihan lanjutan.'
+          }
+        }
+      ];
+
+      /* =====================================================================
+         3. BANK SOAL BAKAT (35 SOAL: 5 PER DIMENSI) & MINAT (16 SOAL)
+         Konteks soal menyesuaikan jurusan siswa (RPL, TKJ, TKR, TSM)
+         ===================================================================== */
+      var JURUSAN_CONTEXT = {
+        RPL: {
+          itemCodeA: 'MOD-RPL-048B',
+          itemCodeB: 'MOD-RPL-048D',
+          log1: '2026-11-26 | AUTH_OK | user=siswa01 | role=student',
+          log2: '2026-11-26 | AUTH_OK | user=siswa01 | role=admin',
+          log3: '2026-11-26 | ERR_404 | path=/api/login | retry=1',
+          log4: '2026-11-26 | AUTH_OK | user=siswa01 | role=student',
+          docText: 'Setiap modul aplikasi wajib memiliki dokumentasi fungsi, skema input-output, dan catatan pengujian sebelum dirilis ke pengguna agar tim pengembang dapat menelusuri perubahan kode dengan mudah.',
+          taskNoun: 'kode program dan dokumentasi modul aplikasi',
+          systemLabel: 'sistem antrean tiket layanan',
+          ratioUnit: 'menit waktu respon layanan'
+        },
+        TKJ: {
+          itemCodeA: 'NET-TKJ-204B',
+          itemCodeB: 'NET-TKJ-204D',
+          log1: '2026-11-26 | LINK_UP | iface=eth0 | vlan=10 | status=OK',
+          log2: '2026-11-26 | LINK_UP | iface=eth0 | vlan=20 | status=OK',
+          log3: '2026-11-26 | TIMEOUT | iface=eth1 | gateway=192.168.1.1',
+          log4: '2026-11-26 | LINK_UP | iface=eth0 | vlan=10 | status=OK',
+          docText: 'Setiap perangkat jaringan dan konfigurasi VLAN wajib dicatat alamat IP, port switch, dan hasil uji konektivitasnya agar teknisi dapat mendiagnosis gangguan jaringan secara cepat.',
+          taskNoun: 'log perangkat dan topologi jaringan',
+          systemLabel: 'jalur distribusi paket data jaringan',
+          ratioUnit: 'detik latensi paket data'
+        },
+        TKR: {
+          itemCodeA: 'ENG-TKR-112B',
+          itemCodeB: 'ENG-TKR-112D',
+          log1: '2026-11-26 | ECU_OK | sensor=MAP | volt=4.2V | normal',
+          log2: '2026-11-26 | ECU_OK | sensor=TPS | volt=0.8V | normal',
+          log3: '2026-11-26 | DTC_P0115 | sensor=ECT | volt=4.9V | cek',
+          log4: '2026-11-26 | ECU_OK | sensor=MAP | volt=4.2V | normal',
+          docText: 'Setiap pemeriksaan kendaraan ringan wajib mencatat hasil pengukuran komponen, standar spesifikasi pabrikan, dan tindakan perbaikan agar riwayat perawatan unit terdokumentasi dengan jelas.',
+          taskNoun: 'lembar kerja servis dan data pemeriksaan kendaraan',
+          systemLabel: 'sistem penyaluran tenaga kendaraan ringan',
+          ratioUnit: 'liter konsumsi bahan bakar'
+        },
+        TSM: {
+          code: 'TSM',
+          itemCodeA: 'MTR-TSM-309B',
+          itemCodeB: 'MTR-TSM-309D',
+          log1: '2026-11-26 | INJ_OK | rpm=1500 | map=32kPa | normal',
+          log2: '2026-11-26 | INJ_OK | rpm=4500 | map=48kPa | normal',
+          log3: '2026-11-26 | MIL_BLINK | kode=08 | sensor=TP | cek',
+          log4: '2026-11-26 | INJ_OK | rpm=1500 | map=32kPa | normal',
+          docText: 'Setiap perawatan sepeda motor wajib mencatat kondisi komponen, hasil penyetelan, dan uji jalan singkat agar kinerja mesin dan keselamatan berkendara tetap terjaga.',
+          taskNoun: 'catatan perawatan dan spesifikasi sepeda motor',
+          systemLabel: 'sistem penerusan putaran mesin sepeda motor',
+          ratioUnit: 'km jarak tempuh per liter'
+        }
+      };
+
+      var SVG_GEAR_DRIVEN = '<svg width="260" height="106" viewBox="0 0 260 106" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram dua roda gigi saling bertautan">' +
+        '<rect x="1" y="1" width="258" height="104" rx="10" fill="#ffffff" stroke="#cbd5e1"/>' +
+        '<circle cx="88" cy="53" r="30" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.5"/>' +
+        '<circle cx="88" cy="53" r="9" fill="#0369a1"/>' +
+        '<path d="M88 16v8M88 82v8M51 53h8M117 53h8M62 27l6 6M108 73l6 6M114 27l-6 6M68 73l-6 6" stroke="#0369a1" stroke-width="3" stroke-linecap="round"/>' +
+        '<path d="M74 22 A34 34 0 0 1 102 22" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round"/>' +
+        '<polygon points="105,22 98,18 99,26" fill="#d97706"/>' +
+        '<text x="88" y="99" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0f172a">Roda Gigi Penggerak (A)</text>' +
+        '<circle cx="152" cy="53" r="30" fill="#fef3c7" stroke="#b45309" stroke-width="2.5"/>' +
+        '<circle cx="152" cy="53" r="9" fill="#b45309"/>' +
+        '<path d="M152 16v8M152 82v8M115 53h8M181 53h8M126 27l6 6M172 73l6 6M178 27l-6 6M132 73l-6 6" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>' +
+        '<text x="166" y="99" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0f172a">Roda Gigi Mengikuti (B)</text>' +
+        '</svg>';
+
+      var SVG_LEVER = '<svg width="280" height="102" viewBox="0 0 280 102" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram tuas dan titik tumpu">' +
+        '<rect x="1" y="1" width="278" height="100" rx="10" fill="#ffffff" stroke="#cbd5e1"/>' +
+        '<line x1="30" y1="54" x2="250" y2="54" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>' +
+        '<polygon points="165,54 151,80 179,80" fill="#0369a1"/>' +
+        '<rect x="38" y="28" width="32" height="24" rx="4" fill="#fee2e2" stroke="#b91c1c" stroke-width="2"/>' +
+        '<text x="54" y="44" text-anchor="middle" font-size="10" font-weight="800" fill="#991b1b">BEBAN</text>' +
+        '<path d="M225 24v22" stroke="#15803d" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<polygon points="225,49 220,41 230,41" fill="#15803d"/>' +
+        '<text x="225" y="18" text-anchor="middle" font-size="10" font-weight="800" fill="#166534">GAYA</text>' +
+        '<text x="165" y="94" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">Titik Tumpu</text>' +
+        '</svg>';
+
+      var SVG_SPATIAL_L = '<svg width="240" height="106" viewBox="0 0 240 106" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram bentuk sudut siku">' +
+        '<rect x="1" y="1" width="238" height="104" rx="10" fill="#ffffff" stroke="#cbd5e1"/>' +
+        '<polygon points="75,22 103,22 103,60 155,60 155,86 75,86" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.5" stroke-linejoin="round"/>' +
+        '<circle cx="89" cy="34" r="4" fill="#0369a1"/>' +
+        '</svg>';
+
+      var SVG_SPATIAL_GRID = '<svg width="250" height="106" viewBox="0 0 250 106" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram peta grid koordinat">' +
+        '<rect x="1" y="1" width="248" height="104" rx="10" fill="#ffffff" stroke="#cbd5e1"/>' +
+        '<g stroke="#cbd5e1" stroke-width="1">' +
+        '<line x1="70" y1="16" x2="70" y2="88"/><line x1="106" y1="16" x2="106" y2="88"/><line x1="142" y1="16" x2="142" y2="88"/><line x1="178" y1="16" x2="178" y2="88"/>' +
+        '<line x1="70" y1="16" x2="178" y2="16"/><line x1="70" y1="40" x2="178" y2="40"/><line x1="70" y1="64" x2="178" y2="64"/><line x1="70" y1="88" x2="178" y2="88"/>' +
+        '</g>' +
+        '<circle cx="88" cy="76" r="6" fill="#0369a1"/>' +
+        '<text x="88" y="99" text-anchor="middle" font-size="10" font-weight="700" fill="#0f172a">Start (0,0)</text>' +
+        '<circle cx="160" cy="28" r="6" fill="#16a34a"/>' +
+        '<text x="160" y="99" text-anchor="middle" font-size="10" font-weight="700" fill="#166534">Target</text>' +
+        '</svg>';
+
+      function buildAptitudeQuestions(jurusan) {
+        var ctx = JURUSAN_CONTEXT[jurusan] || JURUSAN_CONTEXT.RPL;
+
+        return [
+          // 1. KLERIKAL (5 butir: indeks 0,1,2 untuk mode 29; semua 5 untuk mode 51)
+          {
+            id: 'kl-1', dim: 'klerikal', tier: 'quick',
+            prompt: 'Periksa kode acuan berikut: <code>' + ctx.itemCodeA + '</code>. Manakah pilihan di bawah ini yang persis sama huruf dan angkanya?',
+            options: [
+              { label: ctx.itemCodeA.replace('B', 'D'), score: 0 },
+              { label: ctx.itemCodeA, score: 20 },
+              { label: ctx.itemCodeA.replace('-', ''), score: 0 },
+              { label: ctx.itemCodeB, score: 0 }
+            ]
+          },
+          {
+            id: 'kl-2', dim: 'klerikal', tier: 'quick',
+            prompt: 'Perhatikan baris catatan berikut:<br>1) <code>' + ctx.log1 + '</code><br>2) <code>' + ctx.log2 + '</code><br>3) <code>' + ctx.log3 + '</code><br>4) <code>' + ctx.log4 + '</code><br>Baris ke berapakah yang persis identik dengan baris ke-1?',
+            options: [
+              { label: 'Baris ke-2', score: 0 },
+              { label: 'Baris ke-3', score: 0 },
+              { label: 'Baris ke-4', score: 20 },
+              { label: 'Tidak ada yang sama', score: 0 }
+            ]
+          },
+          {
+            id: 'kl-3', dim: 'klerikal', tier: 'quick',
+            prompt: 'Jika daftar berkas diurutkan berdasarkan abjad A–Z, manakah urutan yang benar untuk: <em>Laporan, Lampiran, Lembar, Logbook</em>?',
+            options: [
+              { label: 'Lampiran, Laporan, Lembar, Logbook', score: 20 },
+              { label: 'Laporan, Lampiran, Lembar, Logbook', score: 0 },
+              { label: 'Lembar, Lampiran, Laporan, Logbook', score: 0 },
+              { label: 'Logbook, Lembar, Laporan, Lampiran', score: 0 }
+            ]
+          },
+          {
+            id: 'kl-4', dim: 'klerikal', tier: 'full',
+            prompt: 'Dalam pengecekan 25 formulir kerja, ditemukan 3 formulir tanpa tanda tangan dan 2 formulir salah tanggal. Berapa banyak formulir yang bermasalah jika 1 formulir memiliki kedua masalah tersebut?',
+            options: [
+              { label: '5 formulir', score: 0 },
+              { label: '4 formulir', score: 20 },
+              { label: '3 formulir', score: 0 },
+              { label: '2 formulir', score: 0 }
+            ]
+          },
+          {
+            id: 'kl-5', dim: 'klerikal', tier: 'full',
+            prompt: 'Kode rak penyimpanan memakai pola <code>[Jurusan]-[Tahun]-[Nomor Urut 3 Digit]</code>. Manakah kode yang sesuai aturan untuk tahun 2026 nomor urut 7?',
+            options: [
+              { label: jurusan + '-26-07', score: 0 },
+              { label: jurusan + '-2026-007', score: 20 },
+              { label: '2026-' + jurusan + '-7', score: 0 },
+              { label: jurusan + '-2026-70', score: 0 }
+            ]
+          },
+
+          // 2. PENGGUNAAN BAHASA (5 butir)
+          {
+            id: 'bh-1', dim: 'bahasa', tier: 'quick',
+            prompt: 'Baca pernyataan berikut:<br>"<em>' + ctx.docText + '</em>"<br>Apa gagasan utama dari pernyataan tersebut?',
+            options: [
+              { label: 'Pencatatan dan dokumentasi kerja penting untuk ketertelusuran dan pemeliharaan', score: 20 },
+              { label: 'Pengujian tidak diperlukan apabila proses kerja sudah berjalan cepat', score: 0 },
+              { label: 'Dokumentasi hanya dibuat jika terjadi kesalahan besar', score: 0 },
+              { label: 'Catatan kerja cukup disimpan di ingatan masing-masing anggota', score: 0 }
+            ]
+          },
+          {
+            id: 'bh-2', dim: 'bahasa', tier: 'quick',
+            prompt: 'Pilih kalimat yang menggunakan ejaan dan kata baku sesuai kaidah bahasa Indonesia:',
+            options: [
+              { label: 'Teknisi merubah jadwal pengecekan karena antrian padat.', score: 0 },
+              { label: 'Teknisi mengubah jadwal pengecekan karena antrean padat.', score: 20 },
+              { label: 'Teknisi merubah jadwal pengecekan karena antrean padat.', score: 0 },
+              { label: 'Teknisi mengubah jadwal pengecekan karena antrian padat.', score: 0 }
+            ]
+          },
+          {
+            id: 'bh-3', dim: 'bahasa', tier: 'quick',
+            prompt: 'Dalam menyusun laporan evaluasi ' + ctx.taskNoun + ', bagian manakah yang paling tepat memuat rincian langkah tindakan yang sudah dilakukan?',
+            options: [
+              { label: 'Pembahasan / Pelaksanaan Kegiatan', score: 20 },
+              { label: 'Daftar Pustaka', score: 0 },
+              { label: 'Kata Pengantar', score: 0 },
+              { label: 'Halaman Judul', score: 0 }
+            ]
+          },
+          {
+            id: 'bh-4', dim: 'bahasa', tier: 'full',
+            prompt: 'Kalimat "<em>Alat ukur dikalibrasi secara berkala _____ hasil pengukuran tetap akurat.</em>" Kata penghubung yang paling tepat untuk melengkapi kalimat tersebut adalah...',
+            options: [
+              { label: 'meskipun', score: 0 },
+              { label: 'agar', score: 20 },
+              { label: 'sebaliknya', score: 0 },
+              { label: 'padahal', score: 0 }
+            ]
+          },
+          {
+            id: 'bh-5', dim: 'bahasa', tier: 'full',
+            prompt: 'Manakah ringkasan yang paling efektif untuk menginformasikan bahwa pekerjaan selesai tepat waktu tanpa kendala berarti?',
+            options: [
+              { label: 'Pekerjaan rampung sesuai jadwal dengan seluruh pemeriksaan berjalan baik.', score: 20 },
+              { label: 'Pekerjaan mungkin sudah selesai tetapi belum dicek kembali.', score: 0 },
+              { label: 'Banyak bagian yang tertunda karena belum sempat dikerjakan.', score: 0 },
+              { label: 'Hasilnya kurang lebih seperti yang diharapkan sebelumnya.', score: 0 }
+            ]
+          },
+
+          // 3. MEKANIK (5 butir)
+          {
+            id: 'mk-1', dim: 'mekanik', tier: 'quick',
+            visualSvg: SVG_GEAR_DRIVEN,
+            prompt: 'Perhatikan diagram dua roda gigi yang saling bertautan. Jika Roda Gigi Penggerak (A) berputar searah jarum jam, ke arah mana Roda Gigi Mengikuti (B) berputar?',
+            options: [
+              { label: 'Berlawanan arah jarum jam', score: 20 },
+              { label: 'Searah jarum jam', score: 0 },
+              { label: 'Diam tidak berputar', score: 0 },
+              { label: 'Berputar maju-mundur bergantian', score: 0 }
+            ]
+          },
+          {
+            id: 'mk-2', dim: 'mekanik', tier: 'quick',
+            visualSvg: SVG_LEVER,
+            prompt: 'Pada gambar tuas di atas, jika beban ingin lebih mudah diangkat dengan gaya yang lebih kecil, ke mana titik tumpu sebaiknya digeser?',
+            options: [
+              { label: 'Mendekati posisi BEBAN', score: 20 },
+              { label: 'Mendekati posisi GAYA', score: 0 },
+              { label: 'Dilepas dari papan tuas', score: 0 },
+              { label: 'Dinaikkan ke atas beban', score: 0 }
+            ]
+          },
+          {
+            id: 'mk-3', dim: 'mekanik', tier: 'quick',
+            prompt: 'Mengapa pelumasan pada bagian bergesekan sangat penting dalam perawatan peralatan dan ' + ctx.systemLabel + '?',
+            options: [
+              { label: 'Mengurangi gesekan, keausan, dan panas berlebih antarpermukaan', score: 20 },
+              { label: 'Menambah berat komponen agar tidak mudah bergeser', score: 0 },
+              { label: 'Menghilangkan kebutuhan pemeriksaan rutin selamanya', score: 0 },
+              { label: 'Memperbesar celah bebas secara permanen', score: 0 }
+            ]
+          },
+          {
+            id: 'mk-4', dim: 'mekanik', tier: 'full',
+            prompt: 'Jika puli penggerak berdiameter 6 cm memutar puli yang digerakkan berdiameter 12 cm menggunakan sabuk (belt), bagaimana kecepatan putar puli kedua dibanding puli pertama?',
+            options: [
+              { label: 'Lebih lambat (setengah putaran per putaran puli pertama)', score: 20 },
+              { label: 'Lebih cepat (dua kali putaran per putaran puli pertama)', score: 0 },
+              { label: 'Persis sama kecepatannya', score: 0 },
+              { label: 'Berhenti setelah satu putaran', score: 0 }
+            ]
+          },
+          {
+            id: 'mk-5', dim: 'mekanik', tier: 'full',
+            prompt: 'Saat mengencangkan baut pada komponen berpasangan, langkah kerja yang paling tepat agar tekanan merata adalah...',
+            options: [
+              { label: 'Mengencangkan secara bertahap menyilang sesuai spesifikasi', score: 20 },
+              { label: 'Mengencangkan satu baut sekuat mungkin langsung sampai mentok', score: 0 },
+              { label: 'Membiarkan sebagian baut longgar agar mudah dilepas', score: 0 },
+              { label: 'Menggunakan tuas panjang tambahan tanpa batas', score: 0 }
+            ]
+          },
+
+          // 4. KUANTITATIF (5 butir)
+          {
+            id: 'kn-1', dim: 'kuantitatif', tier: 'quick',
+            prompt: 'Sebuah paket tugas terdiri dari 8 bagian. Jika 6 bagian telah selesai dikerjakan, berapa persen bagian yang telah selesai?',
+            options: [
+              { label: '75%', score: 20 },
+              { label: '60%', score: 0 },
+              { label: '80%', score: 0 },
+              { label: '25%', score: 0 }
+            ]
+          },
+          {
+            id: 'kn-2', dim: 'kuantitatif', tier: 'quick',
+            prompt: 'Perhatikan deret angka berikut: <code>3, 6, 12, 24, ...</code>. Angka berikutnya yang tepat adalah...',
+            options: [
+              { label: '48', score: 20 },
+              { label: '36', score: 0 },
+              { label: '30', score: 0 },
+              { label: '54', score: 0 }
+            ]
+          },
+          {
+            id: 'kn-3', dim: 'kuantitatif', tier: 'quick',
+            prompt: 'Dalam 4 jam kerja diperoleh 120 unit hasil uji (' + ctx.ratioUnit + ' rata-rata stabil). Jika kecepatan kerja tetap sama, berapa unit yang dihasilkan dalam 6 jam?',
+            options: [
+              { label: '180 unit', score: 20 },
+              { label: '160 unit', score: 0 },
+              { label: '150 unit', score: 0 },
+              { label: '240 unit', score: 0 }
+            ]
+          },
+          {
+            id: 'kn-4', dim: 'kuantitatif', tier: 'full',
+            prompt: 'Nilai efisiensi suatu proses meningkat dari 80% menjadi 90%. Berapa kenaikan persentase poin efisiensi tersebut?',
+            options: [
+              { label: '10 poin persentase', score: 20 },
+              { label: '12,5 poin persentase', score: 0 },
+              { label: '5 poin persentase', score: 0 },
+              { label: '8 poin persentase', score: 0 }
+            ]
+          },
+          {
+            id: 'kn-5', dim: 'kuantitatif', tier: 'full',
+            prompt: 'Anggaran bahan habis pakai sebesar Rp400.000 mendapat diskon 15%. Berapa total biaya yang harus dibayarkan?',
+            options: [
+              { label: 'Rp340.000', score: 20 },
+              { label: 'Rp360.000', score: 0 },
+              { label: 'Rp385.000', score: 0 },
+              { label: 'Rp60.000', score: 0 }
+            ]
+          },
+
+          // 5. PENALARAN (5 butir)
+          {
+            id: 'pn-1', dim: 'penalaran', tier: 'quick',
+            prompt: 'Jika semua siswa yang lulus uji keselamatan memakai perlengkapan standar, dan <strong>Raka</strong> adalah siswa yang lulus uji keselamatan, maka kesimpulan yang pasti benar adalah...',
+            options: [
+              { label: 'Raka memakai perlengkapan standar', score: 20 },
+              { label: 'Raka adalah ketua kelompok', score: 0 },
+              { label: 'Semua siswa di sekolah memakai perlengkapan standar', score: 0 },
+              { label: 'Raka tidak pernah melakukan kesalahan', score: 0 }
+            ]
+          },
+          {
+            id: 'pn-2', dim: 'penalaran', tier: 'quick',
+            prompt: 'Saat terjadi gangguan mendadak pada perangkat kerja, langkah awal paling logis sebelum mengganti komponen adalah...',
+            options: [
+              { label: 'Mengidentifikasi gejala dan memeriksa sumber daya/koneksi utama terlebih dahulu', score: 20 },
+              { label: 'Membongkar seluruh bagian secara acak tanpa catatan', score: 0 },
+              { label: 'Mengabaikan pesan peringatan yang muncul', score: 0 },
+              { label: 'Menyalahkan perangkat lain tanpa pengujian', score: 0 }
+            ]
+          },
+          {
+            id: 'pn-3', dim: 'penalaran', tier: 'quick',
+            prompt: 'Perhatikan pola urutan: <code>A1, C3, E5, G7, ...</code>. Pasangan berikutnya yang tepat adalah...',
+            options: [
+              { label: 'I9', score: 20 },
+              { label: 'H8', score: 0 },
+              { label: 'J10', score: 0 },
+              { label: 'I8', score: 0 }
+            ]
+          },
+          {
+            id: 'pn-4', dim: 'penalaran', tier: 'full',
+            prompt: 'Jika lampu indikator menyala merah hanya ketika tegangan turun di bawah batas minimum, dan hari ini indikator menyala merah, maka...',
+            options: [
+              { label: 'Tegangan berada di bawah batas minimum', score: 20 },
+              { label: 'Tegangan berada di atas batas maksimum', score: 0 },
+              { label: 'Lampu indikator pasti rusak', score: 0 },
+              { label: 'Daya listrik sedang mati total', score: 0 }
+            ]
+          },
+          {
+            id: 'pn-5', dim: 'penalaran', tier: 'full',
+            prompt: 'Dua metode kerja menghasilkan kualitas yang sama, tetapi Metode B memakan waktu 30% lebih singkat dengan biaya yang sama. Pilihan paling rasional adalah...',
+            options: [
+              { label: 'Memilih Metode B selama prosedur keselamatan tetap terpenuhi', score: 20 },
+              { label: 'Tetap memilih Metode A karena lebih lama', score: 0 },
+              { label: 'Menggabungkan keduanya secara ganda', score: 0 },
+              { label: 'Tidak menjalankan keduanya', score: 0 }
+            ]
+          },
+
+          // 6. SPASIAL (5 butir)
+          {
+            id: 'sp-1', dim: 'spasial', tier: 'quick',
+            visualSvg: SVG_SPATIAL_L,
+            prompt: 'Perhatikan bentuk siku pada gambar. Jika bentuk tersebut diputar 90 derajat searah jarum jam pada bidang datar, posisi titik sudut yang ditandai lingkaran biru akan berada di...',
+            options: [
+              { label: 'Bagian ujung atas kanan dari bentuk siku', score: 20 },
+              { label: 'Bagian tengah bawah yang datar', score: 0 },
+              { label: 'Tetap di posisi yang sama persis', score: 0 },
+              { label: 'Di luar bidang gambar', score: 0 }
+            ]
+          },
+          {
+            id: 'sp-2', dim: 'spasial', tier: 'quick',
+            visualSvg: SVG_SPATIAL_GRID,
+            prompt: 'Dari titik <code>Start (0,0)</code> pada kotak grid, jalur paling pendek menuju titik <code>Target</code> memerlukan...',
+            options: [
+              { label: 'Geser ke kanan 2 petak dan ke atas 2 petak', score: 20 },
+              { label: 'Geser ke kiri 2 petak dan ke bawah 1 petak', score: 0 },
+              { label: 'Geser ke kanan 4 petak dan ke bawah 1 petak', score: 0 },
+              { label: 'Hanya geser ke atas 1 petak', score: 0 }
+            ]
+          },
+          {
+            id: 'sp-3', dim: 'spasial', tier: 'quick',
+            prompt: 'Jika sebuah kubus padat dicat seluruh permukaan luarnya lalu dipotong menjadi 8 kubus kecil berukuran sama, berapa banyak kubus kecil yang memiliki tepat 3 sisi bercat?',
+            options: [
+              { label: '8 kubus kecil (semua sudut kubus besar)', score: 20 },
+              { label: '4 kubus kecil', score: 0 },
+              { label: '2 kubus kecil', score: 0 },
+              { label: '0 kubus kecil', score: 0 }
+            ]
+          },
+          {
+            id: 'sp-4', dim: 'spasial', tier: 'full',
+            prompt: 'Bentuk huruf <code>R</code> yang dilihat melalui cermin datar akan tampak...',
+            options: [
+              { label: 'Terbalik secara horizontal (kiri-kanan tertukar)', score: 20 },
+              { label: 'Terbalik ke bawah secara vertikal saja', score: 0 },
+              { label: 'Tidak mengalami perubahan sama sekali', score: 0 },
+              { label: 'Berubah menjadi lingkaran penuh', score: 0 }
+            ]
+          },
+          {
+            id: 'sp-5', dim: 'spasial', tier: 'full',
+            prompt: 'Pada denah ruangan menghadap Utara, jika Anda berdiri di sisi Selatan menghadap ke Utara, maka arah Timur berada di sebelah...',
+            options: [
+              { label: 'Kanan Anda', score: 20 },
+              { label: 'Kiri Anda', score: 0 },
+              { label: 'Belakang Anda', score: 0 },
+              { label: 'Atas kepala Anda', score: 0 }
+            ]
+          },
+
+          // 7. VERBAL (5 butir)
+          {
+            id: 'vb-1', dim: 'verbal', tier: 'quick',
+            prompt: '<strong>LAPORAN</strong> berhubungan dengan <strong>RINGKASAN</strong>, sebagaimana <strong>PETA</strong> berhubungan dengan...',
+            options: [
+              { label: 'DENAH / SKEMA ARAH', score: 20 },
+              { label: 'KAMUS', score: 0 },
+              { label: 'KALENDER', score: 0 },
+              { label: 'TIMBANGAN', score: 0 }
+            ]
+          },
+          {
+            id: 'vb-2', dim: 'verbal', tier: 'quick',
+            prompt: 'Manakah kata yang paling berbeda kelompok maknanya dibanding tiga kata lainnya?',
+            options: [
+              { label: 'Tang', score: 0 },
+              { label: 'Obeng', score: 0 },
+              { label: 'Kunci Pas', score: 0 },
+              { label: 'Buku Catatan', score: 20 }
+            ]
+          },
+          {
+            id: 'vb-3', dim: 'verbal', tier: 'quick',
+            prompt: 'Kata <strong>"PREVENTIF"</strong> paling dekat maknanya dengan...',
+            options: [
+              { label: 'Pencegahan sebelum masalah terjadi', score: 20 },
+              { label: 'Penghapusan data secara permanen', score: 0 },
+              { label: 'Penundaan keputusan tanpa batas', score: 0 },
+              { label: 'Penggandaan kesalahan berulang', score: 0 }
+            ]
+          },
+          {
+            id: 'vb-4', dim: 'verbal', tier: 'full',
+            prompt: '<strong>DIAGNOSIS</strong> berhubungan dengan <strong>PENYEBAB MASALAH</strong>, sebagaimana <strong>VALIDASI</strong> berhubungan dengan...',
+            options: [
+              { label: 'KEBENARAN / KESESUAIAN HASIL', score: 20 },
+              { label: 'PENAMBAHAN BIAYA', score: 0 },
+              { label: 'PENGHAPUSAN PROSEDUR', score: 0 },
+              { label: 'PERUBAHAN NAMA', score: 0 }
+            ]
+          },
+          {
+            id: 'vb-5', dim: 'verbal', tier: 'full',
+            prompt: 'Manakah istilah yang paling tepat menggambarkan proses menguraikan masalah besar menjadi bagian-bagian kecil agar lebih mudah dikerjakan?',
+            options: [
+              { label: 'Dekomposisi / Pemecahan bertahap', score: 20 },
+              { label: 'Improvisasi tanpa aturan', score: 0 },
+              { label: 'Spekulasi', score: 0 },
+              { label: 'Abaikan masalah', score: 0 }
+            ]
+          }
+        ];
+      }
+
+      /* =====================================================================
+         4. INVENTORI MINAT KEJURUAN (16 BUTIR: 4 PER JURUSAN RPL, TKJ, TKR, TSM)
+         ===================================================================== */
+      var INTEREST_ITEMS = [
+        // RPL (4 butir)
+        { id: 'in-rpl-1', target: 'RPL', tier: 'quick', prompt: 'Seberapa besar minat Anda merancang logika alur program, fitur aplikasi, atau website?' },
+        { id: 'in-rpl-2', target: 'RPL', tier: 'quick', prompt: 'Seberapa besar minat Anda menelusuri baris kode dan memperbaiki bug/error pada perangkat lunak?' },
+        { id: 'in-rpl-3', target: 'RPL', tier: 'full', prompt: 'Seberapa besar minat Anda menyusun struktur data, tabel basis data, atau antarmuka pengguna (UI)?' },
+        { id: 'in-rpl-4', target: 'RPL', tier: 'full', prompt: 'Seberapa besar minat Anda membangun aplikasi sederhana untuk memecahkan masalah sehari-hari?' },
+
+        // TKJ (4 butir)
+        { id: 'in-tkj-1', target: 'TKJ', tier: 'quick', prompt: 'Seberapa besar minat Anda merakit, menginstalasi sistem operasi, dan merawat perangkat keras komputer?' },
+        { id: 'in-tkj-2', target: 'TKJ', tier: 'quick', prompt: 'Seberapa besar minat Anda mengatur kabel jaringan, router, IP address, dan konektivitas internet?' },
+        { id: 'in-tkj-3', target: 'TKJ', tier: 'full', prompt: 'Seberapa besar minat Anda mengelola server, layanan jaringan, dan keamanan akses perangkat?' },
+        { id: 'in-tkj-4', target: 'TKJ', tier: 'full', prompt: 'Seberapa besar minat Anda mendiagnosis penyebab koneksi terputus atau jaringan melambat?' },
+
+        // TKR (4 butir)
+        { id: 'in-tkr-1', target: 'TKR', tier: 'quick', prompt: 'Seberapa besar minat Anda mempelajari cara kerja mesin mobil, sistem pendingin, dan kelistrikan kendaraan ringan?' },
+        { id: 'in-tkr-2', target: 'TKR', tier: 'quick', prompt: 'Seberapa besar minat Anda melakukan pemeriksaan berkala, servis komponen, dan pembacaan data diagnosa mobil?' },
+        { id: 'in-tkr-3', target: 'TKR', tier: 'full', prompt: 'Seberapa besar minat Anda memahami sistem rem, suspensi, kemudi, dan pemindah tenaga kendaraan roda empat?' },
+        { id: 'in-tkr-4', target: 'TKR', tier: 'full', prompt: 'Seberapa besar minat Anda menggunakan alat ukur bengkel dan membaca diagram kelistrikan/mekanik mobil?' },
+
+        // TSM (4 butir)
+        { id: 'in-tsm-1', target: 'TSM', tier: 'quick', prompt: 'Seberapa besar minat Anda mempelajari konstruksi mesin sepeda motor, sistem injeksi, dan transmisi?' },
+        { id: 'in-tsm-2', target: 'TSM', tier: 'quick', prompt: 'Seberapa besar minat Anda melakukan servis rutin, penyetelan rantai/kampas/katup, dan perawatan sepeda motor?' },
+        { id: 'in-tsm-3', target: 'TSM', tier: 'full', prompt: 'Seberapa besar minat Anda menelusuri gangguan starter, pengapian, atau sensor pada sepeda motor?' },
+        { id: 'in-tsm-4', target: 'TSM', tier: 'full', prompt: 'Seberapa besar minat Anda membongkar-pasang komponen sepeda motor sesuai prosedur standar keselamatan?' }
+      ];
+
+      var LIKERT_OPTIONS = [
+        { label: 'Sangat Tidak Berminat (1)', score: 25 },
+        { label: 'Kurang Berminat (2)', score: 50 },
+        { label: 'Cukup Berminat (3)', score: 75 },
+        { label: 'Sangat Berminat (4)', score: 100 }
+      ];
+
+      /* =====================================================================
+         5. STATE APLIKASI SISWA
+         ===================================================================== */
+      var state = {
+        stage: 1, // 1: Identitas, 2: Ujian, 3: Hasil
+        mode: 'quick', // 'quick' (29 soal) | 'full' (51 soal)
+        student: {
+          nama: '',
+          nisn: '',
+          kelas: '',
+          jurusan: 'RPL',
+          tanggal: getTodayISO()
+        },
+        questions: [],
+        answers: {}, // { questionId: optionIndex }
+        currentIndex: 0,
+        startTimeMs: null,
+        elapsedSec: 0,
+        result: null
+      };
+
+      var timerInterval = null;
+      var toastTimeout = null;
+
+      function getTodayISO() {
+        var now = new Date();
+        var y = now.getFullYear();
+        var m = String(now.getMonth() + 1).padStart(2, '0');
+        var d = String(now.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + d;
+      }
+
+      function formatIndoDate(isoStr) {
+        if (!isoStr) return '-';
+        var parts = isoStr.split('-');
+        if (parts.length !== 3) return isoStr;
+        var months = [
+          'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        var mIdx = parseInt(parts[1], 10) - 1;
+        var mName = months[mIdx] || parts[1];
+        return parseInt(parts[2], 10) + ' ' + mName + ' ' + parts[0];
+      }
+
+      function formatDuration(sec) {
+        var s = Math.max(0, Math.floor(Number(sec) || 0));
+        var mins = Math.floor(s / 60);
+        var rem = s % 60;
+        return String(mins).padStart(2, '0') + ':' + String(rem).padStart(2, '0');
+      }
+
+      function showToast(msg) {
+        var el = document.getElementById('toast');
+        if (!el) return;
+        el.textContent = msg;
+        el.classList.remove('hidden');
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(function () {
+          el.classList.add('hidden');
+        }, 2800);
+      }
+
+      function saveSession() {
+        try {
+          if (state.stage === 2 && state.startTimeMs) {
+            state.elapsedSec = Math.floor((Date.now() - state.startTimeMs) / 1000);
+          }
+          var serializable = {
+            stage: state.stage,
+            mode: state.mode,
+            student: state.student,
+            questions: state.questions,
+            answers: state.answers,
+            currentIndex: state.currentIndex,
+            elapsedSec: state.elapsedSec,
+            result: state.result
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable));
+        } catch (err) {
+          // Aman bila storage penuh atau diblokir
+        }
+      }
+
+      function loadSession() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return false;
+          var parsed = JSON.parse(raw);
+          if (!parsed || typeof parsed !== 'object') return false;
+
+          if (parsed.mode === 'quick' || parsed.mode === 'full') state.mode = parsed.mode;
+          if (parsed.student && typeof parsed.student === 'object') {
+            state.student = {
+              nama: String(parsed.student.nama || ''),
+              nisn: String(parsed.student.nisn || ''),
+              kelas: String(parsed.student.kelas || ''),
+              jurusan: JURUSAN_INFO[parsed.student.jurusan] ? parsed.student.jurusan : 'RPL',
+              tanggal: parsed.student.tanggal || getTodayISO()
+            };
+          }
+          if (Array.isArray(parsed.questions) && parsed.questions.length > 0) {
+            state.questions = parsed.questions;
+          }
+          if (parsed.answers && typeof parsed.answers === 'object') {
+            state.answers = parsed.answers;
+          }
+          state.currentIndex = Math.max(0, Math.min(Number(parsed.currentIndex) || 0, Math.max(0, state.questions.length - 1)));
+          state.elapsedSec = Math.max(0, Number(parsed.elapsedSec) || 0);
+          state.result = parsed.result || null;
+
+          if (parsed.stage === 3 && state.result) {
+            state.stage = 3;
+            return true;
+          }
+          if (parsed.stage === 2 && state.questions.length > 0) {
+            state.stage = 2;
+            state.startTimeMs = Date.now() - state.elapsedSec * 1000;
+            return true;
+          }
+          state.stage = 1;
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
+      /* =====================================================================
+         6. PERAKITAN PAKET SOAL SESUAI JURUSAN & MODE
+         ===================================================================== */
+      function buildQuestionSet(jurusan, mode) {
+        var includeFull = mode === 'full';
+        var aptList = buildAptitudeQuestions(jurusan).filter(function (q) {
+          return includeFull ? true : q.tier === 'quick';
+        });
+
+        var intList = INTEREST_ITEMS.filter(function (item) {
+          return includeFull ? true : item.tier === 'quick';
+        }).map(function (item) {
+          return {
+            id: item.id,
+            kind: 'interest',
+            target: item.target,
+            prompt: item.prompt,
+            options: LIKERT_OPTIONS
+          };
+        });
+
+        var formattedApt = aptList.map(function (q) {
+          return {
+            id: q.id,
+            kind: 'aptitude',
+            dim: q.dim,
+            visualSvg: q.visualSvg || '',
+            prompt: q.prompt,
+            options: q.options
+          };
+        });
+
+        return formattedApt.concat(intList);
+      }
+
+      /* =====================================================================
+         7. RENDER TAHAP 1: IDENTITAS & PILIHAN JURUSAN
+         ===================================================================== */
+      function syncJurusanPreview() {
+        var sel = document.getElementById('inp-jurusan');
+        var code = sel ? sel.value : 'RPL';
+        var info = JURUSAN_INFO[code] || JURUSAN_INFO.RPL;
+        var titleEl = document.getElementById('jurusan-preview-title');
+        var descEl = document.getElementById('jurusan-preview-desc');
+        if (titleEl) titleEl.textContent = info.code + ' — ' + info.name;
+        if (descEl) descEl.textContent = info.desc;
+      }
+
+      function syncModeUI() {
+        var isQuick = state.mode === 'quick';
+        var btnQuick = document.getElementById('mode-quick');
+        var btnFull = document.getElementById('mode-full');
+        var btnStart = document.getElementById('btn-start-exam');
+
+        if (btnQuick) {
+          btnQuick.classList.toggle('selected', isQuick);
+          btnQuick.setAttribute('aria-pressed', isQuick ? 'true' : 'false');
+        }
+        if (btnFull) {
+          btnFull.classList.toggle('selected', !isQuick);
+          btnFull.setAttribute('aria-pressed', !isQuick ? 'true' : 'false');
+        }
+        if (btnStart) {
+          var countLabel = isQuick ? '29 Butir' : '51 Butir';
+          btnStart.querySelector('span').textContent = 'Mulai Mengerjakan Tes (' + countLabel + ')';
+        }
+      }
+
+      function populateFormFromState() {
+        var inpNama = document.getElementById('inp-nama');
+        var inpNisn = document.getElementById('inp-nisn');
+        var inpKelas = document.getElementById('inp-kelas');
+        var inpJurusan = document.getElementById('inp-jurusan');
+
+        if (inpNama) inpNama.value = state.student.nama || '';
+        if (inpNisn) inpNisn.value = state.student.nisn || '';
+        if (inpKelas) inpKelas.value = state.student.kelas || '';
+        if (inpJurusan) inpJurusan.value = state.student.jurusan || 'RPL';
+
+        syncJurusanPreview();
+        syncModeUI();
+      }
+
+      function validateForm() {
+        var namaEl = document.getElementById('inp-nama');
+        var nisnEl = document.getElementById('inp-nisn');
+        var kelasEl = document.getElementById('inp-kelas');
+        var jurusanEl = document.getElementById('inp-jurusan');
+
+        var errNama = document.getElementById('err-nama');
+        var errNisn = document.getElementById('err-nisn');
+        var errKelas = document.getElementById('err-kelas');
+
+        var nama = (namaEl ? namaEl.value : '').trim();
+        var nisn = (nisnEl ? nisnEl.value : '').replace(/\D+/g, '');
+        var kelas = (kelasEl ? kelasEl.value : '').trim();
+        var jurusan = jurusanEl ? jurusanEl.value : 'RPL';
+
+        if (nisnEl) nisnEl.value = nisn;
+
+        var validNama = nama.length >= 2;
+        var validNisn = /^\d{10}$/.test(nisn);
+        var validKelas = kelas.length >= 2;
+
+        if (errNama) errNama.classList.toggle('hidden', validNama);
+        if (errNisn) errNisn.classList.toggle('hidden', validNisn);
+        if (errKelas) errKelas.classList.toggle('hidden', validKelas);
+
+        if (!validNama) {
+          if (namaEl) namaEl.focus();
+          return null;
+        }
+        if (!validNisn) {
+          if (nisnEl) nisnEl.focus();
+          return null;
+        }
+        if (!validKelas) {
+          if (kelasEl) kelasEl.focus();
+          return null;
+        }
+
+        return {
+          nama: nama.toUpperCase(),
+          nisn: nisn,
+          kelas: kelas.toUpperCase(),
+          jurusan: JURUSAN_INFO[jurusan] ? jurusan : 'RPL',
+          tanggal: getTodayISO()
+        };
+      }
+
+      /* =====================================================================
+         8. NAVIGASI TAHAP & RUANG UJIAN (TAHAP 2)
+         ===================================================================== */
+      function setStage(stageNum) {
+        state.stage = stageNum;
+
+        var s1 = document.getElementById('stage-1');
+        var s2 = document.getElementById('stage-2');
+        var s3 = document.getElementById('stage-3');
+        var mainEl = document.getElementById('main-container');
+
+        if (s1) s1.classList.toggle('hidden', stageNum !== 1);
+        if (s2) s2.classList.toggle('hidden', stageNum !== 2);
+        if (s3) s3.classList.toggle('hidden', stageNum !== 3);
+        if (mainEl) mainEl.classList.toggle('exam-active', stageNum === 2);
+
+        var p1 = document.getElementById('step-1-pill');
+        var p2 = document.getElementById('step-2-pill');
+        var p3 = document.getElementById('step-3-pill');
+
+        if (p1) {
+          p1.classList.toggle('active', stageNum === 1);
+          p1.classList.toggle('done', stageNum > 1);
+        }
+        if (p2) {
+          p2.classList.toggle('active', stageNum === 2);
+          p2.classList.toggle('done', stageNum > 2);
+        }
+        if (p3) {
+          p3.classList.toggle('active', stageNum === 3);
+          p3.classList.toggle('done', false);
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function startTimer() {
+        stopTimer();
+        updateTimerText();
+        timerInterval = setInterval(function () {
+          if (state.stage !== 2 || !state.startTimeMs) return;
+          state.elapsedSec = Math.floor((Date.now() - state.startTimeMs) / 1000);
+          updateTimerText();
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function updateTimerText() {
+        var el = document.getElementById('exam-timer');
+        if (el) el.textContent = formatDuration(state.elapsedSec);
+      }
+
+      function countAnswered() {
+        var total = 0;
+        for (var i = 0; i < state.questions.length; i++) {
+          var q = state.questions[i];
+          if (typeof state.answers[q.id] === 'number') total++;
+        }
+        return total;
+      }
+
+      function startExam(studentData) {
+        state.student = studentData;
+        state.questions = buildQuestionSet(studentData.jurusan, studentData.mode);
+        state.answers = {};
+        state.currentIndex = 0;
+        state.result = null;
+        state.elapsedSec = 0;
+        state.startTimeMs = Date.now();
+
+        setStage(2);
+        renderQuestion();
+        startTimer();
+        saveSession();
+      }
+
+      function renderQuestion() {
+        var total = state.questions.length;
+        if (total === 0) return;
+
+        if (state.currentIndex < 0) state.currentIndex = 0;
+        if (state.currentIndex >= total) state.currentIndex = total - 1;
+
+        var q = state.questions[state.currentIndex];
+        var idx = state.currentIndex;
+        var answeredCount = countAnswered();
+
+        var chipEl = document.getElementById('exam-student-chip');
+        if (chipEl) {
+          chipEl.textContent = state.student.nama + ' • ' + state.student.kelas + ' (' + state.student.jurusan + ')';
+        }
+
+        var ansPill = document.getElementById('exam-answered-pill');
+        if (ansPill) ansPill.textContent = 'Terjawab: ' + answeredCount + '/' + total;
+
+        var progFill = document.getElementById('exam-progress-fill');
+        if (progFill) {
+          var pct = Math.round(((idx + 1) / total) * 100);
+          progFill.style.width = pct + '%';
+        }
+
+        var badgeEl = document.getElementById('q-dim-badge');
+        if (badgeEl) {
+          if (q.kind === 'interest') {
+            badgeEl.textContent = 'Minat Kejuruan • Fokus ' + (q.target || state.student.jurusan);
+            badgeEl.classList.add('interest');
+          } else {
+            var dimObj = DIMENSIONS.find(function (d) { return d.id === q.dim; });
+            badgeEl.textContent = (dimObj ? dimObj.no + '. ' + dimObj.name : 'Dimensi Bakat');
+            badgeEl.classList.remove('interest');
+          }
+        }
+
+        var posEl = document.getElementById('q-pos-label');
+        if (posEl) posEl.textContent = 'Soal ' + (idx + 1) + ' dari ' + total;
+
+        var bottomInd = document.getElementById('bottom-q-indicator');
+        if (bottomInd) bottomInd.textContent = (idx + 1) + ' / ' + total;
+
+        var visualBox = document.getElementById('q-visual-box');
+        if (visualBox) {
+          if (q.visualSvg) {
+            visualBox.innerHTML = q.visualSvg;
+            visualBox.classList.remove('hidden');
+          } else {
+            visualBox.innerHTML = '';
+            visualBox.classList.add('hidden');
+          }
+        }
+
+        var promptEl = document.getElementById('q-prompt');
+        if (promptEl) promptEl.innerHTML = q.prompt;
+
+        var optionsEl = document.getElementById('q-options');
+        if (optionsEl) {
+          var selectedOpt = state.answers[q.id];
+          var letters = ['A', 'B', 'C', 'D'];
+          optionsEl.innerHTML = '';
+
+          q.options.forEach(function (opt, optIdx) {
+            var isSelected = selectedOpt === optIdx;
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'option-btn' + (isSelected ? ' selected' : '');
+            btn.setAttribute('role', 'radio');
+            btn.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+
+            var letterSpan = document.createElement('span');
+            letterSpan.className = 'option-letter';
+            letterSpan.textContent = letters[optIdx] || String(optIdx + 1);
+
+            var textSpan = document.createElement('span');
+            textSpan.className = 'option-text';
+            textSpan.textContent = opt.label;
+
+            btn.appendChild(letterSpan);
+            btn.appendChild(textSpan);
+
+            btn.addEventListener('click', function () {
+              state.answers[q.id] = optIdx;
+              saveSession();
+              renderQuestion();
+            });
+
+            optionsEl.appendChild(btn);
+          });
+        }
+
+        var prevBtn = document.getElementById('btn-prev-q');
+        var nextBtn = document.getElementById('btn-next-q');
+        var finishBtn = document.getElementById('btn-finish-q');
+
+        if (prevBtn) prevBtn.disabled = idx === 0;
+        var isLast = idx === total - 1;
+        if (nextBtn) nextBtn.classList.toggle('hidden', isLast);
+        if (finishBtn) finishBtn.classList.toggle('hidden', !isLast);
+      }
+
+      function openDrawer() {
+        var grid = document.getElementById('drawer-num-grid');
+        var modal = document.getElementById('drawer-modal');
+        if (!grid || !modal) return;
+
+        grid.innerHTML = '';
+        state.questions.forEach(function (q, idx) {
+          var isAnswered = typeof state.answers[q.id] === 'number';
+          var isCurrent = idx === state.currentIndex;
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'num-btn' + (isAnswered ? ' answered' : '') + (isCurrent ? ' current' : '');
+          btn.textContent = String(idx + 1);
+          btn.addEventListener('click', function () {
+            state.currentIndex = idx;
+            saveSession();
+            renderQuestion();
+            closeDrawer();
+          });
+          grid.appendChild(btn);
+        });
+
+        modal.classList.remove('hidden');
+      }
+
+      function closeDrawer() {
+        var modal = document.getElementById('drawer-modal');
+        if (modal) modal.classList.add('hidden');
+      }
+
+      function openConfirmFinish() {
+        var total = state.questions.length;
+        var answered = countAnswered();
+        var unanswered = total - answered;
+        var txtEl = document.getElementById('confirm-summary-text');
+        var modal = document.getElementById('confirm-modal');
+
+        if (txtEl) {
+          if (unanswered > 0) {
+            txtEl.innerHTML = 'Anda baru menjawab <strong>' + answered + ' dari ' + total + '</strong> soal (masih ada <strong>' + unanswered + ' soal</strong> belum terjawab). Setelah dikunci, jawaban tidak dapat diubah lagi. Yakin ingin mengunci sekarang?';
+          } else {
+            txtEl.innerHTML = 'Seluruh <strong>' + total + ' soal</strong> telah dijawab. Setelah dikunci, jawaban tidak dapat diubah lagi dan Kartu Hasil Pemetaan Bakat akan langsung ditampilkan.';
+          }
+        }
+        if (modal) modal.classList.remove('hidden');
+      }
+
+      function closeConfirmFinish() {
+        var modal = document.getElementById('confirm-modal');
+        if (modal) modal.classList.add('hidden');
+      }
+
+      /* =====================================================================
+         9. PERHITUNGAN SKOR 7 DIMENSI BP3 & PEMETAAN 4 JURUSAN
+         ===================================================================== */
+      function getCategory(score) {
+        if (score >= 65) return { key: 'baik', label: 'Baik' };
+        if (score >= 40) return { key: 'sedang', label: 'Sedang' };
+        return { key: 'kurang', label: 'Kurang' };
+      }
+
+      function calculateResult() {
+        var dimTotals = {};
+        var dimCounts = {};
+        DIMENSIONS.forEach(function (d) {
+          dimTotals[d.id] = 0;
+          dimCounts[d.id] = 0;
+        });
+
+        var interestTotals = { RPL: 0, TKJ: 0, TKR: 0, TSM: 0 };
+        var interestCounts = { RPL: 0, TKJ: 0, TKR: 0, TSM: 0 };
+
+        state.questions.forEach(function (q) {
+          var chosenIdx = state.answers[q.id];
+          var optScore = (typeof chosenIdx === 'number' && q.options[chosenIdx])
+            ? Number(q.options[chosenIdx].score) || 0
+            : 0;
+
+          if (q.kind === 'aptitude' && dimTotals.hasOwnProperty(q.dim)) {
+            dimTotals[q.dim] += optScore;
+            dimCounts[q.dim] += 1;
+          } else if (q.kind === 'interest' && interestTotals.hasOwnProperty(q.target)) {
+            interestTotals[q.target] += optScore;
+            interestCounts[q.target] += 1;
+          }
+        });
+
+        var scoresByDim = {};
+        var rankedDims = DIMENSIONS.map(function (d) {
+          var maxPossible = Math.max(1, dimCounts[d.id] * 20);
+          var rawPct = Math.round((dimTotals[d.id] / maxPossible) * 100);
+          var clamped = Math.max(5, Math.min(100, rawPct));
+          scoresByDim[d.id] = clamped;
+          var cat = getCategory(clamped);
+          return {
+            id: d.id,
+            no: d.no,
+            name: d.name,
+            score: clamped,
+            category: cat.key,
+            categoryLabel: cat.label,
+            narrative: d.narratives[cat.key]
+          };
+        });
+
+        rankedDims.sort(function (a, b) {
+          if (b.score !== a.score) return b.score - a.score;
+          return a.no - b.no;
+        });
+
+        var overallInterestAvg = 60;
+        var allIntSum = 0;
+        var allIntCnt = 0;
+        Object.keys(interestTotals).forEach(function (k) {
+          allIntSum += interestTotals[k];
+          allIntCnt += interestCounts[k];
+        });
+        if (allIntCnt > 0) {
+          overallInterestAvg = Math.round(allIntSum / allIntCnt);
+        }
+
+        var jurusanRanking = Object.keys(JURUSAN_INFO).map(function (code) {
+          var info = JURUSAN_INFO[code];
+          var aptWeighted = 0;
+          Object.keys(info.weights).forEach(function (dimId) {
+            aptWeighted += (scoresByDim[dimId] || 0) * info.weights[dimId];
+          });
+
+          var intScore = interestCounts[code] > 0
+            ? Math.round(interestTotals[code] / interestCounts[code])
+            : overallInterestAvg;
+
+          var fitIndex = Math.round(aptWeighted * 0.65 + intScore * 0.35);
+          fitIndex = Math.max(10, Math.min(99, fitIndex));
+
+          return {
+            code: code,
+            name: info.name,
+            fitIndex: fitIndex,
+            aptScore: Math.round(aptWeighted),
+            interestScore: intScore
+          };
+        });
+
+        jurusanRanking.sort(function (a, b) {
+          return b.fitIndex - a.fitIndex;
+        });
+
+        if (state.startTimeMs) {
+          state.elapsedSec = Math.floor((Date.now() - state.startTimeMs) / 1000);
+        }
+
+        return {
+          scoresByDim: scoresByDim,
+          rankedDims: rankedDims,
+          jurusanRanking: jurusanRanking,
+          durationSec: state.elapsedSec,
+          durationFormatted: formatDuration(state.elapsedSec),
+          answeredCount: countAnswered(),
+          totalQuestions: state.questions.length,
+          completedAt: new Date().toISOString()
+        };
+      }
+
+      function finalizeExam() {
+        closeConfirmFinish();
+        stopTimer();
+        state.result = calculateResult();
+        setStage(3);
+        renderReport();
+        saveSession();
+        showToast('Jawaban telah dikunci. Kartu hasil siap dilihat.');
+      }
+
+      /* =====================================================================
+         10. RENDER LAPORAN / KARTU HASIL SISWA (TAHAP 3)
+         ===================================================================== */
+      function renderReport() {
+        if (!state.result) return;
+        var st = state.student;
+        var res = state.result;
+        var jurInfo = JURUSAN_INFO[st.jurusan] || JURUSAN_INFO.RPL;
+
+        setText('rep-nama', st.nama || '-');
+        setText('rep-nisn', st.nisn || '-');
+        setText('rep-kelas', st.kelas || '-');
+        setText('rep-jurusan', st.jurusan + ' — ' + jurInfo.name);
+        setText('rep-tanggal', formatIndoDate(st.tanggal));
+        setText('rep-year', String(new Date().getFullYear()));
+
+        // 3 Bakat Terbaik
+        var top3Grid = document.getElementById('rep-top3-grid');
+        if (top3Grid) {
+          top3Grid.innerHTML = '';
+          res.rankedDims.slice(0, 3).forEach(function (item, idx) {
+            var card = document.createElement('div');
+            card.className = 'top3-card rank-' + (idx + 1);
+            card.innerHTML =
+              '<div style="display:flex; align-items:center; gap:10px; min-width:0;">' +
+                '<span class="rank-num">' + (idx + 1) + '</span>' +
+                '<div style="min-width:0;">' +
+                  '<div style="font-size:10px; opacity:0.85; font-weight:700; text-transform:uppercase;">Peringkat ' + (idx + 1) + '</div>' +
+                  '<div style="font-size:13.5px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escapeHtml(item.name) + '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="top3-score">' + item.score + '</div>';
+            top3Grid.appendChild(card);
+          });
+        }
+
+        // 7 Dimensi Kemampuan
+        var dimListEl = document.getElementById('rep-dimensions-list');
+        if (dimListEl) {
+          dimListEl.innerHTML = '';
+          res.rankedDims.forEach(function (dim) {
+            var card = document.createElement('div');
+            card.className = 'dim-card ' + dim.category;
+            card.innerHTML =
+              '<div class="dim-card-head">' +
+                '<h5 class="dim-card-title">' + escapeHtml(dim.name) +
+                  '<span class="cat-pill ' + dim.category + '">' + escapeHtml(dim.categoryLabel) + '</span>' +
+                '</h5>' +
+                '<span class="score-pill ' + dim.category + '">' + dim.score + '</span>' +
+              '</div>' +
+              '<p class="dim-narrative">' + escapeHtml(dim.narrative) + '</p>';
+            dimListEl.appendChild(card);
+          });
+        }
+
+        // Pemetaan 4 Jurusan
+        var jurGrid = document.getElementById('rep-jurusan-grid');
+        var chosenJurObj = res.jurusanRanking.find(function (j) { return j.code === st.jurusan; }) || res.jurusanRanking[0];
+        var topJurObj = res.jurusanRanking[0];
+
+        setText('rep-fit-status', 'Pilihan Anda: ' + st.jurusan + ' (' + (chosenJurObj ? chosenJurObj.fitIndex : 0) + '%)');
+
+        if (jurGrid) {
+          jurGrid.innerHTML = '';
+          res.jurusanRanking.forEach(function (j, idx) {
+            var isChosen = j.code === st.jurusan;
+            var fillClass = idx === 0 ? 'top1' : (idx === 1 ? 'top2' : '');
+
+            var box = document.createElement('div');
+            box.className = 'jur-item' + (isChosen ? ' chosen' : '');
+            box.innerHTML =
+              '<div class="jur-row">' +
+                '<span>' + (idx + 1) + '. ' + escapeHtml(j.code) + ' — ' + escapeHtml(j.name) +
+                  (isChosen ? ' <span style="color:#0369a1; font-size:10.5px;">(Pilihan Anda)</span>' : '') +
+                '</span>' +
+                '<span>' + j.fitIndex + '%</span>' +
+              '</div>' +
+              '<div class="bar-bg"><div class="bar-fill ' + fillClass + '" style="width:' + j.fitIndex + '%;"></div></div>' +
+              '<div class="jur-sub">' +
+                '<span>Bakat: ' + j.aptScore + '</span>' +
+                '<span>Minat: ' + j.interestScore + '</span>' +
+              '</div>';
+            jurGrid.appendChild(box);
+          });
+        }
+
+        var recEl = document.getElementById('rep-recommendation-note');
+        if (recEl && topJurObj && chosenJurObj) {
+          var sameTop = topJurObj.code === st.jurusan;
+          var fitText = sameTop
+            ? 'Jurusan pilihan Anda (<strong>' + st.jurusan + ' — ' + escapeHtml(jurInfo.name) + '</strong>) berada di urutan teratas dengan indeks kecocokan <strong>' + chosenJurObj.fitIndex + '%</strong>.'
+            : 'Indeks kecocokan tertinggi Anda berada pada <strong>' + topJurObj.code + ' — ' + escapeHtml(topJurObj.name) + ' (' + topJurObj.fitIndex + '%)</strong>, sedangkan jurusan pilihan Anda saat ini (<strong>' + st.jurusan + '</strong>) memiliki indeks kecocokan <strong>' + chosenJurObj.fitIndex + '%</strong>.';
+
+          recEl.innerHTML =
+            '<strong>Ringkasan Pemetaan &amp; Saran Pengembangan:</strong> ' + fitText +
+            ' Kekuatan utama Anda terlihat pada <strong>' + escapeHtml(res.rankedDims[0].name) + '</strong> (' + res.rankedDims[0].score + ') dan <strong>' + escapeHtml(res.rankedDims[1].name) + '</strong> (' + res.rankedDims[1].score + '). ' +
+            'Gunakan hasil ini sebagai bahan refleksi belajar dan diskusi bersama Guru BK di SMKS Wira Buana 2.';
+        }
+      }
+
+      function setText(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val;
+      }
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      /* =====================================================================
+         11. UNDUH RINGKASAN (.TXT / .JSON) & RESET SESI SISWA
+         ===================================================================== */
+      function triggerFileDownload(filename, content, mimeType) {
+        try {
+          var blob = new Blob([content], { type: mimeType });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(function () {
+            URL.revokeObjectURL(url);
+          }, 1000);
+          showToast('Berkas ' + filename + ' berhasil diunduh.');
+        } catch (err) {
+          showToast('Gagal mengunduh berkas di browser ini. Gunakan Cetak / Simpan PDF.');
+        }
+      }
+
+      function downloadSummaryTxt() {
+        if (!state.result) return;
+        var st = state.student;
+        var res = state.result;
+        var rankedDims = res.rankedDims;
+
+        var lines = [
+          '==============================================================',
+          'HASIL ASESMEN BAKAT & MINAT SISWA',
+          'SMKS WIRA BUANA 2',
+          '==============================================================',
+          'Nama Lengkap   : ' + st.nama,
+          'NISN           : ' + st.nisn,
+          'Kelas          : ' + st.kelas,
+          'Jurusan Pilihan: ' + st.jurusan + ' - ' + (JURUSAN_INFO[st.jurusan] ? JURUSAN_INFO[st.jurusan].name : ''),
+          'Tanggal Tes    : ' + formatIndoDate(st.tanggal),
+          'Durasi Tes     : ' + res.durationFormatted,
+          '',
+          '--- 3 BAKAT TERBAIK ---',
+          '1. ' + rankedDims[0].name + ' : ' + rankedDims[0].score + ' (' + rankedDims[0].categoryLabel + ')',
+          '2. ' + rankedDims[1].name + ' : ' + rankedDims[1].score + ' (' + rankedDims[1].categoryLabel + ')',
+          '3. ' + rankedDims[2].name + ' : ' + rankedDims[2].score + ' (' + rankedDims[2].categoryLabel + ')',
+          '',
+          '--- RINCIAN 7 DIMENSI KEMAMPUAN ---'
+        ];
+
+        rankedDims.forEach(function (d, idx) {
+          lines.push((idx + 1) + '. ' + d.name + ' : ' + d.score + ' [' + d.categoryLabel + ']');
+        });
+
+        lines.push('');
+        lines.push('--- KECOCOKAN 4 JURUSAN ---');
+        res.jurusanRanking.forEach(function (j, idx) {
+          lines.push((idx + 1) + '. ' + j.code + ' (' + j.name + ') : ' + j.fitIndex + '%');
+        });
+
+        var safeName = st.nama.replace(/[^A-Z0-9]+/gi, '_');
+        triggerFileDownload('Hasil_ABM_' + safeName + '.txt', lines.join('\n'), 'text/plain;charset=utf-8');
+      }
+
+      function downloadSummaryJson() {
+        if (!state.result) return;
+        var payload = {
+          sekolah: 'SMKS WIRA BUANA 2',
+          siswa: state.student,
+          mode: state.mode,
+          hasil: state.result
+        };
+        var safeName = state.student.nama.replace(/[^A-Z0-9]+/gi, '_');
+        triggerFileDownload('Hasil_ABM_' + safeName + '.json', JSON.stringify(payload, null, 2), 'application/json;charset=utf-8');
+      }
+
+      function resetToNewStudent() {
+        stopTimer();
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch (err) {
+          // Abaikan error storage
+        }
+
+        state = {
+          stage: 1,
+          mode: 'quick',
+          student: {
+            nama: '',
+            nisn: '',
+            kelas: '',
+            jurusan: 'RPL',
+            tanggal: getTodayISO()
+          },
+          questions: [],
+          answers: {},
+          currentIndex: 0,
+          startTimeMs: null,
+          elapsedSec: 0,
+          result: null
+        };
+
+        populateFormFromState();
+        setStage(1);
+        showToast('Sesi direset. Siap untuk siswa baru.');
+      }
+
+      /* =====================================================================
+         12. EVENT LISTENERS & INISIALISASI APLIKASI
+         ===================================================================== */
+      function bindEvents() {
+        var jurusanSel = document.getElementById('inp-jurusan');
+        if (jurusanSel) {
+          jurusanSel.addEventListener('change', syncJurusanPreview);
+        }
+
+        var modeQuick = document.getElementById('mode-quick');
+        var modeFull = document.getElementById('mode-full');
+        if (modeQuick) {
+          modeQuick.addEventListener('click', function () {
+            state.mode = 'quick';
+            syncModeUI();
+          });
+        }
+        if (modeFull) {
+          modeFull.addEventListener('click', function () {
+            state.mode = 'full';
+            syncModeUI();
+          });
+        }
+
+        var form = document.getElementById('student-form');
+        if (form) {
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var studentData = validateForm();
+            if (!studentData) {
+              showToast('Lengkapi data identitas siswa dengan benar terlebih dahulu.');
+              return;
+            }
+            startExam(studentData);
+          });
+        }
+
+        var prevBtn = document.getElementById('btn-prev-q');
+        var nextBtn = document.getElementById('btn-next-q');
+        var finishBtn = document.getElementById('btn-finish-q');
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function () {
+            if (state.currentIndex > 0) {
+              state.currentIndex -= 1;
+              saveSession();
+              renderQuestion();
+            }
+          });
+        }
+
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function () {
+            if (state.currentIndex < state.questions.length - 1) {
+              state.currentIndex += 1;
+              saveSession();
+              renderQuestion();
+            }
+          });
+        }
+
+        if (finishBtn) {
+          finishBtn.addEventListener('click', openConfirmFinish);
+        }
+
+        // Drawer soal
+        var openDrawerBtn = document.getElementById('btn-open-drawer');
+        var closeDrawerBtn = document.getElementById('btn-close-drawer');
+        var drawerModal = document.getElementById('drawer-modal');
+        if (openDrawerBtn) openDrawerBtn.addEventListener('click', openDrawer);
+        if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
+        if (drawerModal) {
+          drawerModal.addEventListener('click', function (e) {
+            if (e.target === drawerModal) closeDrawer();
+          });
+        }
+
+        // Modal konfirmasi kunci jawaban
+        var closeConfirmBtn = document.getElementById('btn-close-confirm');
+        var cancelConfirmBtn = document.getElementById('btn-cancel-finish');
+        var confirmFinishBtn = document.getElementById('btn-confirm-finish');
+        var confirmModal = document.getElementById('confirm-modal');
+        if (closeConfirmBtn) closeConfirmBtn.addEventListener('click', closeConfirmFinish);
+        if (cancelConfirmBtn) cancelConfirmBtn.addEventListener('click', closeConfirmFinish);
+        if (confirmFinishBtn) confirmFinishBtn.addEventListener('click', finalizeExam);
+        if (confirmModal) {
+          confirmModal.addEventListener('click', function (e) {
+            if (e.target === confirmModal) closeConfirmFinish();
+          });
+        }
+
+        // Modal konfirmasi reset / siswa baru
+        var resetBtn = document.getElementById('btn-reset-exam');
+        var resetModal = document.getElementById('reset-modal');
+        var closeResetBtn = document.getElementById('btn-close-reset');
+        var cancelResetBtn = document.getElementById('btn-cancel-reset');
+        var confirmResetBtn = document.getElementById('btn-confirm-reset');
+
+        function openResetModal() {
+          if (resetModal) resetModal.classList.remove('hidden');
+        }
+        function closeResetModal() {
+          if (resetModal) resetModal.classList.add('hidden');
+        }
+
+        if (resetBtn) resetBtn.addEventListener('click', openResetModal);
+        if (closeResetBtn) closeResetBtn.addEventListener('click', closeResetModal);
+        if (cancelResetBtn) cancelResetBtn.addEventListener('click', closeResetModal);
+        if (confirmResetBtn) {
+          confirmResetBtn.addEventListener('click', function () {
+            closeResetModal();
+            resetToNewStudent();
+          });
+        }
+        if (resetModal) {
+          resetModal.addEventListener('click', function (e) {
+            if (e.target === resetModal) closeResetModal();
+          });
+        }
+
+        // Modal panduan pasang di HP
+        var openInstallBtn = document.getElementById('btn-open-install');
+        var closeInstallBtn = document.getElementById('btn-close-install');
+        var okInstallBtn = document.getElementById('btn-ok-install');
+        var installModal = document.getElementById('install-modal');
+
+        function openInstallModal() {
+          if (installModal) installModal.classList.remove('hidden');
+        }
+        function closeInstallModal() {
+          if (installModal) installModal.classList.add('hidden');
+        }
+
+        if (openInstallBtn) openInstallBtn.addEventListener('click', openInstallModal);
+        if (closeInstallBtn) closeInstallBtn.addEventListener('click', closeInstallModal);
+        if (okInstallBtn) okInstallBtn.addEventListener('click', closeInstallModal);
+        if (installModal) {
+          installModal.addEventListener('click', function (e) {
+            if (e.target === installModal) closeInstallModal();
+          });
+        }
+
+        // Aksi laporan
+        var printBtn = document.getElementById('btn-print-pdf');
+        var dlTxtBtn = document.getElementById('btn-download-txt');
+        var dlJsonBtn = document.getElementById('btn-download-json');
+
+        if (printBtn) {
+          printBtn.addEventListener('click', function () {
+            window.print();
+          });
+        }
+        if (dlTxtBtn) dlTxtBtn.addEventListener('click', downloadSummaryTxt);
+        if (dlJsonBtn) dlJsonBtn.addEventListener('click', downloadSummaryJson);
+
+        // Simpan saat tab disembunyikan/ditutup di HP
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden && state.stage === 2) {
+            saveSession();
+          }
+        });
+        window.addEventListener('beforeunload', function () {
+          if (state.stage === 2 || state.stage === 3) {
+            saveSession();
+          }
+        });
+      }
+
+      function init() {
+        initInlinePWA();
+        bindEvents();
+
+        var restored = loadSession();
+        populateFormFromState();
+
+        if (state.stage === 3 && state.result) {
+          setStage(3);
+          renderReport();
+        } else if (state.stage === 2 && state.questions.length > 0) {
+          setStage(2);
+          renderQuestion();
+          startTimer();
+        } else {
+          setStage(1);
+        }
+
+        if (restored && state.stage === 2) {
+          showToast('Sesi ujian sebelumnya dipulihkan.');
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
